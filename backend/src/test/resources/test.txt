@@ -1,0 +1,54 @@
+John Doe
++1 6691721455 | johndoe@andrew.cmu.edu | www.linkedin.com/in/john-doe
+
+EDUCATION
+Carnegie Mellon University Pittsburgh, PA
+Master of Science in Electrical and Computer Engineering
+Dec 2023
+• GPA: 4.0/4.0 
+• Coursework: Computer Systems, Machine Learning, Deep Learning, Principles of Software Construction.
+
+UCLA Los-Angeles, CA
+Bachelor of Science in Electrical and Electronic Engineering (4-Year Undergraduate Program)
+Jun 2021
+• GPA: 4.0/4.0.
+
+SKILLS
+• Programming Languages: Python, Java, JavaScript/TypeScript, C/C++
+• Platforms and Tools: Git, Linux, TensorFlow, Maven, Node.js, Google Colab, AWS
+• Languages: English, Chinese (Bilingual)
+
+EXPERIENCE
+Carnegie Mellon University Pittsburgh, PA
+Research Assistant (Machine Learning)
+May 2022 - Current
+• Constructed machine learning models for the purpose of face identification and verification.
+• Designed algorithms to filter the incoming data and integrated optimization methods for training efficiency.
+
+Google London, UK
+Software Engineering Intern
+Sep 2020 - Dec 2021
+• Collaborated with engineers and scientists on implementing state-of-the-art machine learning models for the 
+latest pixel product. Contribution was used in production and deployed to millions of users. 
+• Implemented machine learning models, reaching a maximum classification accuracy of 98.43%.
+• Extended the method to classify multiple types of data, achieving accuracies over 90%.
+
+Meta Paris, France
+Summer Intern 
+Jul 2018 - Sep 2018
+• Rotated within multiple departments, including R&D, financial, and production teams. Contributed to product 
+field tests, financial analysis, and sales projection with product development teams.
+
+PROJECT
+E-commerce Website | Java, TypeScript, React
+Full-Stack Developer
+May 2022 - Current
+• Designed and developed a website using java as the backend.
+• Designed algorithms to filter the incoming data and integrated optimization methods for training efficiency.
+
+College Employment Data Visualization Framework | Java
+Full-Stack Developer
+Sep 2020 - Dec 2021
+• Developed a web-based framework using Java to extract and visualize college alumni employment statistics, integrating Spreadsheet, PDF, and Web APIs.
+• Crafted object structures with Object Model diagrams, enhancing the connections between different interfaces such as dataPlugin and visualPlugin interfaces within the framework, utilizing skills in Java and React.js.
+• Created comprehensive test cases using JUnit, including robust tests for JSON parsing functionalities, ensuring an error-free backend.

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Resume.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">resume-web</a> &gt; <a href="index.source.html" class="el_package">anqi.chen.framework</a> &gt; <span class="el_source">Resume.java</span></div><h1>Resume.java</h1><pre class="source lang-java linenums">package anqi.chen.framework;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONObject;
+
+// builder pattern
+<span class="nc" id="L12">public class Resume {</span>
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNumber;
+    private String url;
+    private List&lt;String&gt; skills;
+    private List&lt;Experience&gt; experiences;
+    private List&lt;Project&gt; projects;
+
+    /**
+     * Set first name.
+     * 
+     * @param firstName the first name to set to.
+     * @return this object.
+     */
+    public Resume setFirstName(String firstName) {
+<span class="nc" id="L29">        this.firstName = firstName;</span>
+<span class="nc" id="L30">        return this;</span>
+    }
+
+    /**
+     * Set last name.
+     * 
+     * @param lastName the last name to set to.
+     * @return this object.
+     */
+    public Resume setLastName(String lastName) {
+<span class="nc" id="L40">        this.lastName = lastName;</span>
+<span class="nc" id="L41">        return this;</span>
+    }
+
+    /**
+     * Set Email.
+     * 
+     * @param email the email address to set to.
+     * @return this object.
+     */
+    public Resume setEmail(String email) {
+<span class="nc" id="L51">        this.email = email;</span>
+<span class="nc" id="L52">        return this;</span>
+    }
+
+
+    /**
+     * Set phone number.
+     * 
+     * @param phoneNumber the phone number to set to.
+     * @return this object.
+     */
+    public Resume setPhoneNumber(String phoneNumber) {
+<span class="nc" id="L63">        this.phoneNumber = phoneNumber;</span>
+<span class="nc" id="L64">        return this;</span>
+    }
+
+    /**
+     * Set url.
+     * 
+     * @param url the url to set to.
+     * @return this object.
+     */
+    public Resume setUrl(String url) {
+<span class="nc" id="L74">        this.url = url;</span>
+<span class="nc" id="L75">        return this;</span>
+    }
+
+    /**
+     * Set skills.
+     * 
+     * @param skills the skills to set to.
+     * @return this object.
+     */
+    public Resume setSkills(List&lt;String&gt; skills) {
+<span class="nc" id="L85">        this.skills = new ArrayList&lt;&gt;(skills);</span>
+<span class="nc" id="L86">        return this;</span>
+    }
+
+    /**
+     * Set experiences.
+     * 
+     * @param experiences The experience to set to.
+     * @return this object.
+     */
+    public Resume setExperiences(List&lt;Experience&gt; experiences) {
+<span class="nc" id="L96">        this.experiences = new ArrayList&lt;&gt;(experiences);</span>
+<span class="nc" id="L97">        Collections.sort(this.experiences);</span>
+<span class="nc" id="L98">        return this;</span>
+    }
+
+    /**
+     * Set projects.
+     * 
+     * @param projects The project to set to.
+     * @return this object.
+     */
+    public Resume setProjects(List&lt;Project&gt; projects) {
+<span class="nc" id="L108">        this.projects = new ArrayList&lt;&gt;(projects);</span>
+<span class="nc" id="L109">        Collections.sort(this.projects);</span>
+<span class="nc" id="L110">        return this;</span>
+    }
+
+    /**
+     * Return a json string containing all fields in this object.
+     * 
+     * @return a json string containing all fields in this object.
+     */
+    public String buildJsonString() {
+<span class="nc" id="L119">        return buildJsonObject().toString();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L124">        return buildJsonObject().toString();</span>
+    }
+
+    public JSONObject buildJsonObject() {
+<span class="nc" id="L128">        JSONObject json = new JSONObject();</span>
+<span class="nc" id="L129">        json.put(&quot;firstName&quot;, this.firstName);</span>
+<span class="nc" id="L130">        json.put(&quot;lastName&quot;, this.lastName);</span>
+<span class="nc" id="L131">        json.put(&quot;email&quot;, this.email);</span>
+<span class="nc" id="L132">        json.put(&quot;phoneNumber&quot;, this.phoneNumber);</span>
+<span class="nc" id="L133">        json.put(&quot;url&quot;, this.url);</span>
+<span class="nc" id="L134">        json.put(&quot;skills&quot;, this.skills);</span>
+<span class="nc" id="L135">        json.put(&quot;experiences&quot;, this.experiences);</span>
+<span class="nc" id="L136">        json.put(&quot;projects&quot;, this.projects);</span>
+<span class="nc" id="L137">        return json;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

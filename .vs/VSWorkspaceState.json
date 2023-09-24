@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\src",
+    "\\backend\\src\\main",
+    "\\backend\\src\\main\\java",
+    "\\backend\\src\\main\\java\\anqi",
+    "\\backend\\src\\main\\java\\anqi\\chen",
+    "\\backend\\src\\main\\java\\anqi\\chen\\resources",
+    "\\backend\\src\\main\\java\\anqi\\chen\\resources\\META-INF",
+    "\\backend\\src\\main\\java\\anqi\\chen\\resources\\META-INF\\services"
+  ],
+  "SelectedNode": "\\backend\\src\\main\\java\\anqi\\chen\\framework\\ResumeFramework.java",
+  "PreviewInSolutionExplorer": false
+}
