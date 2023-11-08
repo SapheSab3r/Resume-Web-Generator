@@ -10,21 +10,19 @@ import org.json.JSONObject;
 public class Project implements Comparable {
     private String title;
     private List<String> skills;
-    private String summary;
     private String startDate;
     private String endDate;
     private List<String> description;
 
-    public Project(String title, List<String> skills, String summary, String startDate, String endDate,
+    public Project(String title, List<String> skills, String startDate, String endDate,
             List<String> description) {
-        if (title.isEmpty() || skills.isEmpty() || summary.isEmpty() ||
+        if (title.isEmpty() || skills.isEmpty() ||
                 startDate.isEmpty() || endDate.isEmpty() || description.isEmpty()) {
             throw new IllegalArgumentException("Empty parameter!");
         }
 
         this.title = title;
         this.skills = skills;
-        this.summary = summary;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
@@ -36,10 +34,6 @@ public class Project implements Comparable {
 
     public List<String> getSkills() {
         return skills;
-    }
-
-    public String getSummary() {
-        return summary;
     }
 
     public String getStartDate() {
@@ -59,7 +53,6 @@ public class Project implements Comparable {
         JSONObject json = new JSONObject();
         json.put("title", this.title);
         json.put("skills", this.skills);
-        json.put("summary", this.summary);
         json.put("startDate", this.startDate);
         json.put("endDate", this.endDate);
         json.put("description", this.description);

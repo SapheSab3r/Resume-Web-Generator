@@ -1,4 +1,5 @@
 package anqi.chen.framework;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +17,7 @@ public class Resume {
     private String phoneNumber;
     private String url;
     private List<String> skills;
+    private List<Education> educations;
     private List<Experience> experiences;
     private List<Project> projects;
 
@@ -52,7 +54,6 @@ public class Resume {
         return this;
     }
 
-
     /**
      * Set phone number.
      * 
@@ -83,6 +84,19 @@ public class Resume {
      */
     public Resume setSkills(List<String> skills) {
         this.skills = new ArrayList<>(skills);
+        return this;
+    }
+
+    /**
+     * Set educations.
+     * 
+     * @param list the educations to set to.
+     * @return this object.
+     */
+
+    public Resume setEduction(List<Education> educations) {
+        this.educations = new ArrayList<>(educations);
+        Collections.sort(this.educations);
         return this;
     }
 
@@ -131,6 +145,7 @@ public class Resume {
         json.put("email", this.email);
         json.put("phoneNumber", this.phoneNumber);
         json.put("url", this.url);
+        json.put("educations", this.educations);
         json.put("skills", this.skills);
         json.put("experiences", this.experiences);
         json.put("projects", this.projects);

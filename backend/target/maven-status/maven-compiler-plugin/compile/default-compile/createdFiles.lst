@@ -1,8 +1,8 @@
 anqi\chen\framework\DataPlugin.class
-anqi\chen\framework\Project.class
-anqi\chen\framework\Resume.class
 anqi\chen\framework\ResumeFramework.class
 anqi\chen\plugins\PDFPlugin.class
 anqi\chen\framework\Experience.class
 anqi\chen\APP.class
 anqi\chen\plugins\TextPlugin.class
+anqi\chen\framework\Project.class
+anqi\chen\framework\Resume.class

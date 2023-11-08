@@ -58,12 +58,12 @@ public class Experience implements Comparable {
     @Override
     public String toString() {
         JSONObject json = new JSONObject();
-        json.put("title", this.title);
-        json.put("position", this.position);
-        json.put("location", this.location);
-        json.put("startTime", this.startDate);
-        json.put("endTime", this.endDate);
-        json.put("description", this.description);
+        json.put("Title:", this.title);
+        json.put("Position:", this.position);
+        json.put("Location:", this.location);
+        json.put("StartTime:", this.startDate);
+        json.put("EndTime:", this.endDate);
+        json.put("Description:", this.description);
         return json.toString();
     }
 

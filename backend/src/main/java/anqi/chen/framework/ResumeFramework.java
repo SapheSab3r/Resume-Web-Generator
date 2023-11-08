@@ -82,6 +82,7 @@ public class ResumeFramework {
                 .setLastName(this.currentPlugin.getLastName())
                 .setPhoneNumber(this.currentPlugin.getPhoneNumber())
                 .setUrl(this.currentPlugin.getURL())
+                .setEduction(this.currentPlugin.getEducation())
                 .setExperiences(this.currentPlugin.getExperience())
                 .setProjects(this.currentPlugin.getProject())
                 .setSkills(this.currentPlugin.getSkills());

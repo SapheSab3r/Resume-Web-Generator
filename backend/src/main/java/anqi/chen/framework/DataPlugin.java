@@ -61,6 +61,13 @@ public interface DataPlugin {
     String getURL();
 
     /**
+     * Get a list of {@link Education}.
+     * 
+     * @return a list of {@link Education}
+     */
+    List<Education> getEducation();
+
+    /**
      * Get a list of string. Each String represents a skill in the profile.
      * 
      * @return a list of string. Each String represents a skill in the profile.
