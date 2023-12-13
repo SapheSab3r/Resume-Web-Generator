@@ -3,189 +3,528 @@ package anqi.chen.plugins;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import anqi.chen.framework.DataPlugin;
 import anqi.chen.framework.Experience;
+import anqi.chen.framework.Education;
 import anqi.chen.framework.ResumeFramework;
 import anqi.chen.framework.Project;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
+
+import java.util.regex.Matcher;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
-<span class="nc" id="L17">public class PDFPlugin implements DataPlugin {</span>
-<span class="nc" id="L18">    private final int num3 = 3;</span>
+<span class="nc" id="L25">public class PDFPlugin implements DataPlugin {</span>
+<span class="nc" id="L26">    private final String datePatternString = &quot;(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.)\\s\\d{4}\\s*[–—-]?\\s*(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May |Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.|Present)\\s?(?:\\d{4})?&quot;;</span>
+
     private String[] splitDocumentText;
 
     @Override
     public void parseDataResource(String dataPath) throws IOException {
-<span class="nc" id="L23">        PDDocument document = PDDocument.load(new File(dataPath));</span>
-<span class="nc bnc" id="L24" title="All 2 branches missed.">        if (!document.isEncrypted()) {</span>
-<span class="nc" id="L25">            PDFTextStripper stripper = new PDFTextStripper();</span>
-<span class="nc" id="L26">            String documentText = stripper.getText(document);</span>
-<span class="nc" id="L27">            splitDocumentText = documentText.split(&quot;\\R&quot;);</span>
+<span class="nc" id="L32">        PDDocument document = PDDocument.load(new File(dataPath));</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (!document.isEncrypted()) {</span>
+<span class="nc" id="L34">            PDFTextStripper stripper = new PDFTextStripper();</span>
+<span class="nc" id="L35">            String documentText = stripper.getText(document);</span>
+<span class="nc" id="L36">            splitDocumentText = documentText.split(&quot;\\R&quot;);</span>
         }
-<span class="nc" id="L29">        document.close();</span>
-<span class="nc" id="L30">    }</span>
+<span class="nc" id="L38">        document.close();</span>
+<span class="nc" id="L39">    }</span>
 
     @Override
     public void onRegister(ResumeFramework framework) {
-
-<span class="nc" id="L35">    }</span>
+        
+<span class="nc" id="L44">    }</span>
 
     @Override
     public String getPluginName() {
-<span class="nc" id="L39">        return &quot;PDF&quot;;</span>
+<span class="nc" id="L48">        return &quot;PDF&quot;;</span>
     }
 
     @Override
     public String getFirstName() {
-<span class="nc" id="L44">        String name = splitDocumentText[0];</span>
-<span class="nc" id="L45">        String[] splitName = name.split(&quot; &quot;);</span>
-<span class="nc" id="L46">        return splitName[0];</span>
+<span class="nc" id="L53">        String name = splitDocumentText[0];</span>
+<span class="nc" id="L54">        String[] splitName = name.split(&quot; &quot;);</span>
+<span class="nc" id="L55">        return splitName[0];</span>
     }
 
     @Override
     public String getLastName() {
-<span class="nc" id="L51">        String name = splitDocumentText[0];</span>
-<span class="nc" id="L52">        String[] splitName = name.split(&quot; &quot;);</span>
-<span class="nc" id="L53">        return splitName[1];</span>
+<span class="nc" id="L60">        String name = splitDocumentText[0];</span>
+<span class="nc" id="L61">        String[] splitName = name.split(&quot; &quot;);</span>
+<span class="nc" id="L62">        return splitName[1];</span>
     }
 
     @Override
     public String getEmail() {
-<span class="nc" id="L58">        String info = splitDocumentText[1];</span>
-<span class="nc" id="L59">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
-<span class="nc" id="L60">        return splitInfo[1];</span>
+<span class="nc" id="L67">        String info = splitDocumentText[1];</span>
+<span class="nc" id="L68">        Pattern pattern = Pattern.compile(&quot;\\S+@\\S+&quot;);</span>
+<span class="nc" id="L69">        Matcher matcher = pattern.matcher(info);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (matcher.find()) {</span>
+<span class="nc" id="L71">            return matcher.group();</span>
+        }
+<span class="nc" id="L73">        return null; // or return an empty string</span>
     }
 
     @Override
     public String getPhoneNumber() {
-<span class="nc" id="L65">        String info = splitDocumentText[1];</span>
-<span class="nc" id="L66">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
-<span class="nc" id="L67">        return splitInfo[0];</span>
+<span class="nc" id="L78">        String info = splitDocumentText[1];</span>
+<span class="nc" id="L79">        Pattern pattern = Pattern.compile(&quot;\\d{3}-\\d{3}-\\d{4}&quot;);</span>
+<span class="nc" id="L80">        Matcher matcher = pattern.matcher(info);</span>
+
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (matcher.find()) {</span>
+<span class="nc" id="L83">            return matcher.group();</span>
+        }
+<span class="nc" id="L85">        return null;</span>
     }
 
     @Override
     public String getURL() {
-<span class="nc" id="L72">        String info = splitDocumentText[1];</span>
-<span class="nc" id="L73">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
-<span class="nc" id="L74">        return splitInfo[2];</span>
+<span class="nc" id="L90">        String info = splitDocumentText[1];</span>
+<span class="nc" id="L91">        Pattern pattern = Pattern.compile(&quot;linkedin\\.com/in/\\S+&quot;);</span>
+<span class="nc" id="L92">        Matcher matcher = pattern.matcher(info);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (matcher.find()) {</span>
+<span class="nc" id="L94">            return matcher.group();</span>
+        }
+<span class="nc" id="L96">        return null;</span>
     }
 
     @Override
     public List&lt;String&gt; getSkills() {
-<span class="nc" id="L79">        int startIdx = -1;</span>
-<span class="nc" id="L80">        List&lt;String&gt; skills = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.length; i++) {</span>
-<span class="nc bnc" id="L82" title="All 2 branches missed.">            if (splitDocumentText[i].trim().equals(&quot;SKILLS&quot;)) {</span>
-<span class="nc" id="L83">                startIdx = i;</span>
-<span class="nc" id="L84">                break;</span>
+<span class="nc" id="L101">        int startIdx = -1;</span>
+<span class="nc" id="L102">        List&lt;String&gt; skills = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.length; i++) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if (splitDocumentText[i].trim().equals(&quot;TECHNICAL SKILLS&quot;)) {</span>
+<span class="nc" id="L105">                startIdx = i;</span>
+<span class="nc" id="L106">                break;</span>
             }
         }
-<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (startIdx == -1) {</span>
-<span class="nc" id="L88">            return null;</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (startIdx == -1) {</span>
+<span class="nc" id="L110">            return null;</span>
         }
-<span class="nc" id="L90">        startIdx += 1;</span>
 
-<span class="nc bnc" id="L92" title="All 2 branches missed.">        while (splitDocumentText[startIdx].trim() != &quot;&quot;) {</span>
-<span class="nc" id="L93">            String skillLine = splitDocumentText[startIdx];</span>
-<span class="nc" id="L94">            String[] splitSkillLine = skillLine.split(&quot;[:,]&quot;);</span>
-<span class="nc bnc" id="L95" title="All 2 branches missed.">            for (int j = 1; j &lt; splitSkillLine.length; j++) {</span>
-<span class="nc" id="L96">                skills.add(splitSkillLine[j].trim());</span>
+<span class="nc" id="L113">        startIdx += 1;</span>
+
+        // Process lines until &quot;EXPERIENCE&quot; is reached or an empty line is encountered
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        while (startIdx &lt; splitDocumentText.length &amp;&amp;</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                !splitDocumentText[startIdx].trim().equalsIgnoreCase(&quot;EXPERIENCE&quot;) &amp;&amp;</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">                !splitDocumentText[startIdx].trim().isEmpty()) {</span>
+<span class="nc" id="L119">            String skillLine = splitDocumentText[startIdx];</span>
+
+            // Split the line using a comma and/or colon as separators
+<span class="nc" id="L122">            String[] splitSkills = skillLine.split(&quot;[,:]&quot;);</span>
+
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            for (String skill : splitSkills) {</span>
+<span class="nc" id="L125">                skills.add(skill.trim());</span>
             }
-<span class="nc" id="L98">            startIdx++;</span>
-<span class="nc" id="L99">        }</span>
 
-<span class="nc" id="L101">        return skills;</span>
+<span class="nc" id="L128">            startIdx++;</span>
+<span class="nc" id="L129">        }</span>
+
+<span class="nc" id="L131">        return skills;</span>
+    }
+
+    @Override
+    public List&lt;Education&gt; getEducation() {
+<span class="nc" id="L136">        List&lt;Integer&gt; idxStart = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L137">        List&lt;Education&gt; educations = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.length; i++) {</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (splitDocumentText[i].trim().equals(&quot;EDUCATION&quot;)) {</span>
+<span class="nc" id="L140">                i++;</span>
+<span class="nc bnc" id="L141" title="All 4 branches missed.">                while (i &lt; splitDocumentText.length &amp;&amp; !splitDocumentText[i].trim().isEmpty()) {</span>
+<span class="nc" id="L142">                    idxStart.add(i);</span>
+<span class="nc bnc" id="L143" title="All 4 branches missed.">                    while (i &lt; splitDocumentText.length &amp;&amp; !splitDocumentText[i].trim().isEmpty()) {</span>
+<span class="nc" id="L144">                        i++; // skip till next empty line</span>
+                    }
+                }
+            }
+        }
+
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        for (int idx : idxStart) {</span>
+<span class="nc" id="L151">            educations.add(createEducation(idx));</span>
+<span class="nc" id="L152">        }</span>
+
+<span class="nc" id="L154">        return educations;</span>
+
+    }
+
+    private Education createEducation(int startIdx) {
+<span class="nc" id="L159">        Pattern datePattern = Pattern.compile(datePatternString);</span>
+<span class="nc" id="L160">        String schoolLine = splitDocumentText[startIdx].trim();</span>
+<span class="nc" id="L161">        Matcher dateMatcher = datePattern.matcher(schoolLine);</span>
+
+<span class="nc" id="L163">        String school = null;</span>
+<span class="nc" id="L164">        String startDate = null;</span>
+<span class="nc" id="L165">        String endDate = null;</span>
+<span class="nc" id="L166">        String major = null;</span>
+<span class="nc" id="L167">        String location = null;</span>
+
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (dateMatcher.find()) {</span>
+            // Extract the part of the line before the date as the school name
+<span class="nc" id="L171">            school = schoolLine.substring(0, dateMatcher.start()).trim();</span>
+
+<span class="nc" id="L173">            String datePortion = schoolLine.substring(dateMatcher.start(), dateMatcher.end());</span>
+<span class="nc" id="L174">            String[] dates = datePortion.split(&quot;\\s*[-–—\\?]\\s*&quot;);</span>
+<span class="nc" id="L175">            startDate = dates[0].trim();</span>
+<span class="nc" id="L176">            endDate = dates[1].trim();</span>
+
+            // The major and location are assumed to be on the same line
+<span class="nc bnc" id="L179" title="All 2 branches missed.">            if (splitDocumentText.length &gt; startIdx + 1) {</span>
+<span class="nc" id="L180">                String majorAndLocationLine = splitDocumentText[startIdx + 1].trim();</span>
+
+                // Use a regex pattern to identify the location format (e.g., City, ST)
+<span class="nc" id="L183">                Pattern locationPattern = Pattern.compile(&quot;\\w+\\S*,\\s*[A-Z]{2}&quot;);</span>
+<span class="nc" id="L184">                Matcher locationMatcher = locationPattern.matcher(majorAndLocationLine);</span>
+
+<span class="nc bnc" id="L186" title="All 2 branches missed.">                if (locationMatcher.find()) {</span>
+<span class="nc" id="L187">                    location = majorAndLocationLine.substring(locationMatcher.start()).trim();</span>
+<span class="nc" id="L188">                    major = majorAndLocationLine.substring(0, locationMatcher.start()).trim();</span>
+                } else {
+<span class="nc" id="L190">                    throw new IllegalArgumentException(&quot;Unable to extract major and location.&quot;);</span>
+                }
+<span class="nc" id="L192">            } else {</span>
+<span class="nc" id="L193">                throw new IllegalArgumentException(&quot;Expected line with major and location not found.&quot;);</span>
+            }
+<span class="nc" id="L195">        } else {</span>
+<span class="nc" id="L196">            throw new IllegalArgumentException(&quot;No date pattern found in the line: &quot; + schoolLine);</span>
+        }
+
+        // Extract other details like GPA and coursework
+<span class="nc" id="L200">        List&lt;String&gt; otherDetails = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L201">        int detailsIdx = startIdx + 2; // Start from the line after the major</span>
+
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        while (detailsIdx &lt; splitDocumentText.length</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                &amp;&amp; !splitDocumentText[detailsIdx].trim().isEmpty()</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">                &amp;&amp; !splitDocumentText[detailsIdx].trim().equalsIgnoreCase(&quot;TECHNICAL SKILLS&quot;)) {</span>
+<span class="nc" id="L206">            String detailLine = splitDocumentText[detailsIdx].trim();</span>
+
+            // Check if the detailLine ends with a comma and the next line is not empty
+<span class="nc bnc" id="L209" title="All 4 branches missed.">            if (detailLine.endsWith(&quot;,&quot;) &amp;&amp; detailsIdx + 1 &lt; splitDocumentText.length</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">                    &amp;&amp; !splitDocumentText[detailsIdx + 1].trim().isEmpty()) {</span>
+                // Append the next line to the current detailLine and increment the detailsIdx
+<span class="nc" id="L212">                detailLine += &quot; &quot; + splitDocumentText[detailsIdx + 1].trim();</span>
+<span class="nc" id="L213">                detailsIdx++;</span>
+            }
+
+<span class="nc" id="L216">            otherDetails.add(detailLine.replaceAll(&quot;•&quot;, &quot;\n&quot;));</span>
+<span class="nc" id="L217">            detailsIdx++;</span>
+<span class="nc" id="L218">        }</span>
+
+        // Validation
+<span class="nc bnc" id="L221" title="All 10 branches missed.">        if (school == null || major == null || startDate == null || endDate == null || location == null) {</span>
+<span class="nc" id="L222">            throw new IllegalArgumentException(&quot;One of the parameters for Education constructor is null.&quot;);</span>
+        }
+<span class="nc" id="L224">        return new Education(school, major, location, startDate, endDate, otherDetails);</span>
     }
 
     @Override
     public List&lt;Experience&gt; getExperience() {
-<span class="nc" id="L106">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L107">        List&lt;Experience&gt; experiences = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L229">        List&lt;Integer&gt; idxStart = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L230">        List&lt;Experience&gt; experiences = new ArrayList&lt;&gt;();</span>
 
-<span class="nc bnc" id="L109" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.length; i++) {</span>
-<span class="nc bnc" id="L110" title="All 2 branches missed.">            if (splitDocumentText[i].trim().equals(&quot;EDUCATION&quot;) ||</span>
-<span class="nc bnc" id="L111" title="All 2 branches missed.">                    splitDocumentText[i].trim().equals(&quot;EXPERIENCE&quot;) ||</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">                    splitDocumentText[i].trim().equals(&quot;&quot;)) {</span>
-<span class="nc bnc" id="L113" title="All 2 branches missed.">                if (splitDocumentText[i + 1].split(&quot; &quot;).length &gt; 1) {</span>
-<span class="nc" id="L114">                    startIdxs.add(i + 1);</span>
-                }
+<span class="nc" id="L232">        Pattern datePattern = Pattern.compile(datePatternString);</span>
+
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.length; i++) {</span>
+
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            if (splitDocumentText[i].trim().equals(&quot;EXPERIENCE&quot;)) {</span>
+
+<span class="nc" id="L238">                i++; // Move to the next line</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">                while (i &lt; splitDocumentText.length) {</span>
+<span class="nc" id="L240">                    Matcher dateMatcher = datePattern.matcher(splitDocumentText[i].trim());</span>
+
+<span class="nc bnc" id="L242" title="All 2 branches missed.">                    if (dateMatcher.find()) {</span>
+<span class="nc" id="L243">                        idxStart.add(i);</span>
+                    }
+<span class="nc bnc" id="L245" title="All 2 branches missed.">                    if (splitDocumentText[i].trim().equalsIgnoreCase(&quot;NOTABLE PROJECTS&quot;)) {</span>
+<span class="nc" id="L246">                        break; // Stop the loop when &quot;NOTABLE PROJECTS&quot; is found</span>
+                    }
+<span class="nc" id="L248">                    i++;</span>
+<span class="nc" id="L249">                }</span>
+
             }
         }
 
-<span class="nc bnc" id="L119" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
-<span class="nc" id="L120">            experiences.add(createExperience(idx));</span>
-<span class="nc" id="L121">        }</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        for (int idx : idxStart) {</span>
+<span class="nc" id="L255">            experiences.add(createExperience(idx));</span>
+<span class="nc" id="L256">        }</span>
 
-<span class="nc" id="L123">        return experiences;</span>
+<span class="nc" id="L258">        return experiences;</span>
     }
 
     private Experience createExperience(int startIdx) {
-<span class="nc" id="L127">        String[] splitTitle = splitDocumentText[startIdx].split(&quot; &quot;);</span>
-<span class="nc" id="L128">        String[] splitDate = splitDocumentText[startIdx + 2].split(&quot; - &quot;);</span>
-<span class="nc" id="L129">        String title = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, 0, splitTitle.length - 2)).trim();</span>
-<span class="nc" id="L130">        String location = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, splitTitle.length - 2, splitTitle.length))</span>
-<span class="nc" id="L131">                .trim();</span>
-<span class="nc" id="L132">        String position = splitDocumentText[startIdx + 1].trim();</span>
-<span class="nc" id="L133">        String startDate = splitDate[0].trim();</span>
-<span class="nc" id="L134">        String endDate = splitDate[splitDate.length - 1].trim();</span>
+<span class="nc" id="L262">        String title = null;</span>
+<span class="nc" id="L263">        String startDate = null;</span>
+<span class="nc" id="L264">        String endDate = null;</span>
+<span class="nc" id="L265">        String position = null;</span>
+<span class="nc" id="L266">        String location = null;</span>
+<span class="nc" id="L267">        List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
 
-<span class="nc" id="L136">        List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L137">        startIdx = startIdx + num3;</span>
-<span class="nc bnc" id="L138" title="All 4 branches missed.">        while (startIdx &lt; splitDocumentText.length &amp;&amp; splitDocumentText[startIdx].trim() != &quot;&quot;) {</span>
-<span class="nc" id="L139">            String cleanText = splitDocumentText[startIdx].replace(&quot;\u2022 &quot;, &quot;&quot;);</span>
-<span class="nc" id="L140">            descriptions.add(cleanText.trim());</span>
-<span class="nc" id="L141">            startIdx++;</span>
-<span class="nc" id="L142">        }</span>
+<span class="nc" id="L269">        Pattern datePattern = Pattern.compile(datePatternString);</span>
+<span class="nc" id="L270">        String titleLine = splitDocumentText[startIdx].trim();</span>
+<span class="nc" id="L271">        Matcher dateMatcher = datePattern.matcher(titleLine);</span>
 
-<span class="nc" id="L144">        return new Experience(title, position, location, startDate, endDate, descriptions);</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (dateMatcher.find()) {</span>
+            // Extract the part of the line before the date as the school name
+<span class="nc" id="L275">            title = titleLine.substring(0, dateMatcher.start()).trim();</span>
+<span class="nc" id="L276">            String datePortion = titleLine.substring(dateMatcher.start(), dateMatcher.end());</span>
+<span class="nc" id="L277">            String[] dates = datePortion.split(&quot;\\s*[-–—\\?]\\s*&quot;);</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (dates.length &gt;= 2) {</span>
+<span class="nc" id="L279">                startDate = dates[0].trim();</span>
+<span class="nc" id="L280">                endDate = dates[1].trim();</span>
+            } else {
+<span class="nc" id="L282">                startDate = endDate = dates[0].trim(); // Set both to the same value if only one date is present</span>
+            }
+
+            // The major and location are assumed to be on the same line
+<span class="nc bnc" id="L286" title="All 2 branches missed.">            if (splitDocumentText.length &gt; startIdx + 1) {</span>
+<span class="nc" id="L287">                String positionAndLocationLine = splitDocumentText[startIdx + 1].trim();</span>
+
+                // Use a regex pattern to identify the location format (e.g., City, ST)
+<span class="nc" id="L290">                Pattern locationPattern = Pattern.compile(&quot;\\w+\\S*,\\s*[A-Z]{2}&quot;);</span>
+<span class="nc" id="L291">                Matcher locationMatcher = locationPattern.matcher(positionAndLocationLine);</span>
+
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                if (locationMatcher.find()) {</span>
+<span class="nc" id="L294">                    location = positionAndLocationLine.substring(locationMatcher.start()).trim();</span>
+<span class="nc" id="L295">                    position = positionAndLocationLine.substring(0, locationMatcher.start()).trim();</span>
+                } else {
+<span class="nc" id="L297">                    throw new IllegalArgumentException(&quot;Unable to extract major and location.&quot;);</span>
+                }
+<span class="nc" id="L299">            } else {</span>
+<span class="nc" id="L300">                throw new IllegalArgumentException(&quot;Expected line with major and location not found.&quot;);</span>
+            }
+<span class="nc" id="L302">        } else {</span>
+<span class="nc" id="L303">            throw new IllegalArgumentException(&quot;No date pattern found in the line: &quot; + titleLine);</span>
+        }
+
+<span class="nc" id="L306">        int detailsIdx = startIdx + 2; // Start from the line after the position</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">        while (detailsIdx &lt; splitDocumentText.length</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">                &amp;&amp; !splitDocumentText[detailsIdx].trim().isEmpty()</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">                &amp;&amp; !splitDocumentText[detailsIdx].trim().equalsIgnoreCase(&quot;NOTABLE PROJECTS&quot;)</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">                &amp;&amp; !splitDocumentText[detailsIdx].trim().equalsIgnoreCase(&quot;PROJECTS&quot;)) {</span>
+
+<span class="nc" id="L312">            String detailLine = splitDocumentText[detailsIdx];</span>
+
+            // Check if the line starts with a date pattern
+<span class="nc" id="L315">            Matcher dateMatcher2 = datePattern.matcher(detailLine);</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">            if (dateMatcher2.find()) {</span>
+                // If a date pattern is found, it's the start of a new experience section
+<span class="nc" id="L318">                break; // Exit the loop as a new experience section has started</span>
+            }
+
+            // Check if the line starts with a bullet point (•)
+<span class="nc bnc" id="L322" title="All 2 branches missed.">            if (detailLine.startsWith(&quot;•&quot;)) {</span>
+                // Remove the bullet point and trim again to ensure there are no extra spaces
+<span class="nc" id="L324">                detailLine = detailLine.substring(1).trim();</span>
+
+                // Check if the detailLine ends with a comma and the next line is not empty
+<span class="nc bnc" id="L327" title="All 4 branches missed.">                while (detailLine.endsWith(&quot;,&quot;)</span>
+                        &amp;&amp; detailsIdx + 1 &lt; splitDocumentText.length
+<span class="nc bnc" id="L329" title="All 2 branches missed.">                        &amp;&amp; !splitDocumentText[detailsIdx + 1].trim().isEmpty()</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">                        &amp;&amp; !splitDocumentText[detailsIdx + 1].trim().equalsIgnoreCase(&quot;NOTABLE PROJECTS&quot;)) {</span>
+                    // Append the next line to the current detailLine and increment the detailsIdx
+<span class="nc" id="L332">                    detailsIdx++;</span>
+<span class="nc" id="L333">                    detailLine += &quot; &quot; + splitDocumentText[detailsIdx].trim();</span>
+                }
+            }
+<span class="nc" id="L336">            descriptions.add(detailLine);</span>
+<span class="nc" id="L337">            detailsIdx++;</span>
+<span class="nc" id="L338">        }</span>
+
+        // System.out.println(&quot;Title: &quot; + title);
+        // System.out.println(&quot;Position: &quot; + position);
+        // System.out.println(&quot;Location: &quot; + location);
+        // System.out.println(&quot;StartDate: &quot; + startDate);
+        // System.out.println(&quot;EndDate: &quot; + endDate);
+        // System.out.println(&quot;Descriptions: &quot; + descriptions);
+
+        // Validation
+<span class="nc bnc" id="L348" title="All 10 branches missed.">        if (title == null || position == null || startDate == null || endDate == null || location == null) {</span>
+<span class="nc" id="L349">            throw new IllegalArgumentException(&quot;One of the parameters for Experience constructor is null.&quot;);</span>
+        }
+
+<span class="nc" id="L352">        return new Experience(title, position, location, startDate, endDate, descriptions);</span>
     }
 
     @Override
     public List&lt;Project&gt; getProject() {
-<span class="nc" id="L149">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L150">        List&lt;Project&gt; projects = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L357">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L358">        List&lt;Project&gt; projects = new ArrayList&lt;&gt;();</span>
 
-<span class="nc bnc" id="L152" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.length; i++) {</span>
-<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (splitDocumentText[i].trim().equals(&quot;PROJECT&quot;) ||</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">                    splitDocumentText[i].trim().equals(&quot;NOTABLE PROJECT&quot;)) {</span>
-<span class="nc bnc" id="L155" title="All 2 branches missed.">                if (splitDocumentText[i + 1].split(&quot; &quot;).length &gt; 1) {</span>
-<span class="nc" id="L156">                    startIdxs.add(i + 1);</span>
-                }
+<span class="nc" id="L360">        Pattern datePattern = Pattern.compile(datePatternString);</span>
+
+<span class="nc bnc" id="L362" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.length; i++) {</span>
+
+<span class="nc bnc" id="L364" title="All 2 branches missed.">            if (splitDocumentText[i].trim().equals(&quot;NOTABLE PROJECTS&quot;)) {</span>
+
+<span class="nc" id="L366">                i++; // Move to the next line</span>
+<span class="nc bnc" id="L367" title="All 2 branches missed.">                while (i &lt; splitDocumentText.length) {</span>
+<span class="nc" id="L368">                    Matcher dateMatcher = datePattern.matcher(splitDocumentText[i].trim());</span>
+
+<span class="nc bnc" id="L370" title="All 2 branches missed.">                    if (dateMatcher.find()) {</span>
+<span class="nc" id="L371">                        startIdxs.add(i);</span>
+                    }
+
+<span class="nc" id="L374">                    i++;</span>
+<span class="nc" id="L375">                }</span>
+
             }
         }
 
-<span class="nc bnc" id="L161" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
-<span class="nc" id="L162">            projects.add(createProject(idx));</span>
-<span class="nc" id="L163">        }</span>
-<span class="nc" id="L164">        return projects;</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
+<span class="nc" id="L381">            projects.add(createProject(idx));</span>
+<span class="nc" id="L382">        }</span>
+<span class="nc" id="L383">        return projects;</span>
     }
 
     private Project createProject(int startIdx) {
-<span class="nc" id="L168">        String[] splitTitle = splitDocumentText[startIdx].split(&quot;\\|&quot;);</span>
-<span class="nc" id="L169">        String title = splitTitle[0].trim();</span>
-<span class="nc" id="L170">        String[] skills = splitTitle[1].split(&quot;,&quot;);</span>
-<span class="nc bnc" id="L171" title="All 2 branches missed.">        for (int i = 0; i &lt; skills.length; i++) {</span>
-<span class="nc" id="L172">            skills[i] = skills[i].trim(); // Trimming each skill</span>
+<span class="nc" id="L387">        String title = null;</span>
+<span class="nc" id="L388">        List&lt;String&gt; skills = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L389">        String startDate = null;</span>
+<span class="nc" id="L390">        String endDate = null;</span>
+<span class="nc" id="L391">        List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L393">        Pattern datePattern = Pattern.compile(datePatternString);</span>
+<span class="nc" id="L394">        String projectLine = splitDocumentText[startIdx].trim();</span>
+<span class="nc" id="L395">        Matcher dateMatcher = datePattern.matcher(projectLine);</span>
+
+<span class="nc bnc" id="L397" title="All 2 branches missed.">        if (dateMatcher.find()) {</span>
+            // extract title
+<span class="nc" id="L399">            String[] parts = projectLine.split(&quot;\\|&quot;);</span>
+<span class="nc" id="L400">            title = parts[0].trim();</span>
+            // extract date and skills
+<span class="nc" id="L402">            String skillsAndDate = parts[1].trim();</span>
+<span class="nc" id="L403">            Matcher match = datePattern.matcher(skillsAndDate);</span>
+<span class="nc bnc" id="L404" title="All 2 branches missed.">            if (match.find()) {</span>
+<span class="nc" id="L405">                String skillsString = skillsAndDate.substring(0, match.start()).trim();</span>
+<span class="nc" id="L406">                Collections.addAll(skills, skillsString.split(&quot;,\\s*&quot;));</span>
+            }
+
+<span class="nc" id="L409">            String datePortion = projectLine.substring(dateMatcher.start(), dateMatcher.end());</span>
+
+<span class="nc" id="L411">            String[] dates = datePortion.split(&quot;\\s*[-–—\\?]\\s*&quot;);</span>
+<span class="nc bnc" id="L412" title="All 2 branches missed.">            if (dates.length &gt;= 2) {</span>
+<span class="nc" id="L413">                startDate = dates[0].trim();</span>
+<span class="nc" id="L414">                endDate = dates[1].trim();</span>
+            } else {
+<span class="nc" id="L416">                startDate = endDate = dates[0].trim(); // Set both to the same value if only one date is present</span>
+            }
+<span class="nc" id="L418">        } else {</span>
+<span class="nc" id="L419">            throw new IllegalArgumentException(&quot;No date pattern found in the line: &quot; + projectLine);</span>
         }
 
-<span class="nc" id="L175">        String[] splitDate = splitTitle[2].split(&quot; - &quot;);</span>
-<span class="nc" id="L176">        String startDate = splitDate[0].trim();</span>
-<span class="nc" id="L177">        String endDate = splitDate[1].trim();</span>
+<span class="nc" id="L422">        int detailsIdx = startIdx + 1; // Start from the line after the title and date</span>
+<span class="nc bnc" id="L423" title="All 2 branches missed.">        while (detailsIdx &lt; splitDocumentText.length</span>
+<span class="nc bnc" id="L424" title="All 2 branches missed.">                &amp;&amp; !splitDocumentText[detailsIdx].trim().isEmpty()) {</span>
 
-        // Extracting Summary
-<span class="nc" id="L180">        String summary = splitDocumentText[startIdx + 1].trim();</span>
+<span class="nc" id="L426">            String detailLine = splitDocumentText[detailsIdx];</span>
 
-<span class="nc" id="L182">        List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L183">        startIdx += 2;</span>
-<span class="nc bnc" id="L184" title="All 4 branches missed.">        while (startIdx &lt; splitDocumentText.length &amp;&amp; !splitDocumentText[startIdx].trim().isEmpty()) {</span>
-<span class="nc" id="L185">            descriptions.add(splitDocumentText[startIdx].trim());</span>
-<span class="nc" id="L186">            startIdx++;</span>
+            // Check if the line starts with a date pattern
+<span class="nc" id="L429">            Matcher dateMatcher2 = datePattern.matcher(detailLine);</span>
+<span class="nc bnc" id="L430" title="All 2 branches missed.">            if (dateMatcher2.find()) {</span>
+                // If a date pattern is found, it's the start of a new experience section
+<span class="nc" id="L432">                break; // Exit the loop as a new experience section has started</span>
+            }
+
+            // Check if the line starts with a bullet point (•)
+<span class="nc bnc" id="L436" title="All 2 branches missed.">            if (detailLine.startsWith(&quot;•&quot;)) {</span>
+                // Remove the bullet point and trim again to ensure there are no extra spaces
+<span class="nc" id="L438">                detailLine = detailLine.substring(1).trim();</span>
+
+                // Check if the detailLine ends with a comma and the next line is not empty
+<span class="nc bnc" id="L441" title="All 4 branches missed.">                while (detailLine.endsWith(&quot;,&quot;)</span>
+                        &amp;&amp; detailsIdx + 1 &lt; splitDocumentText.length
+<span class="nc bnc" id="L443" title="All 2 branches missed.">                        &amp;&amp; !splitDocumentText[detailsIdx + 1].trim().isEmpty()</span>
+<span class="nc bnc" id="L444" title="All 2 branches missed.">                        &amp;&amp; !splitDocumentText[detailsIdx + 1].trim().equalsIgnoreCase(&quot;NOTABLE PROJECTS&quot;)) {</span>
+                    // Append the next line to the current detailLine and increment the detailsIdx
+<span class="nc" id="L446">                    detailsIdx++;</span>
+<span class="nc" id="L447">                    detailLine += &quot; &quot; + splitDocumentText[detailsIdx].trim();</span>
+                }
+            }
+<span class="nc" id="L450">            descriptions.add(detailLine);</span>
+<span class="nc" id="L451">            detailsIdx++;</span>
+<span class="nc" id="L452">        }</span>
+
+        // Debugging output
+<span class="nc" id="L455">        System.out.println(&quot;Title: &quot; + title);</span>
+<span class="nc" id="L456">        System.out.println(&quot;Skills: &quot; + skills);</span>
+<span class="nc" id="L457">        System.out.println(&quot;StartDate: &quot; + startDate);</span>
+<span class="nc" id="L458">        System.out.println(&quot;EndDate: &quot; + endDate);</span>
+<span class="nc" id="L459">        System.out.println(&quot;Descriptions: &quot; + descriptions);</span>
+
+        // Validation
+<span class="nc bnc" id="L462" title="All 6 branches missed.">        if (title == null || startDate == null || endDate == null) {</span>
+<span class="nc" id="L463">            throw new IllegalArgumentException(&quot;One of the parameters for Project constructor is null.&quot;);</span>
         }
-<span class="nc" id="L188">        return new Project(title, Arrays.asList(skills), summary, startDate, endDate, descriptions);</span>
+
+<span class="nc" id="L466">        return new Project(title, skills, startDate, endDate, descriptions);</span>
     }
+
+    public static void main(String[] args) {
+        // Get the logger for &quot;org.apache.pdfbox&quot; and set its level to SEVERE to
+        // suppress WARN messages
+<span class="nc" id="L472">        Logger.getLogger(&quot;org.apache.pdfbox&quot;).setLevel(Level.SEVERE);</span>
+<span class="nc" id="L473">        PDFPlugin plugin = new PDFPlugin();</span>
+
+        // Replace this path with the path to your sample PDF
+<span class="nc" id="L476">        String pdfPath = &quot;D:\\Destop\\ResumeProject\\backend\\src\\test\\resources\\Anqi_Chen_Resume.pdf&quot;;</span>
+
+        try {
+<span class="nc" id="L479">            plugin.parseDataResource(pdfPath);</span>
+
+<span class="nc" id="L481">            System.out.println(&quot;First Name: &quot; + plugin.getFirstName());</span>
+<span class="nc" id="L482">            System.out.println(&quot;Last Name: &quot; + plugin.getLastName());</span>
+<span class="nc" id="L483">            System.out.println(&quot;Email: &quot; + plugin.getEmail());</span>
+<span class="nc" id="L484">            System.out.println(&quot;Phone Number: &quot; + plugin.getPhoneNumber());</span>
+<span class="nc" id="L485">            System.out.println(&quot;URL: &quot; + plugin.getURL());</span>
+
+            // Iterate through and print education objects
+<span class="nc" id="L488">            System.out.println(&quot;\nEDUCATION: &quot;);</span>
+<span class="nc bnc" id="L489" title="All 2 branches missed.">            for (Education education : plugin.getEducation()) {</span>
+<span class="nc" id="L490">                System.out.println(&quot;School: &quot; + education.getSchool());</span>
+<span class="nc" id="L491">                System.out.println(&quot;Major: &quot; + education.getMajor());</span>
+<span class="nc" id="L492">                System.out.println(&quot;Location: &quot; + education.getLocation());</span>
+<span class="nc" id="L493">                System.out.println(&quot;StartDate: &quot; + education.getStartDate());</span>
+<span class="nc" id="L494">                System.out.println(&quot;EndDate: &quot; + education.getEndDate());</span>
+<span class="nc" id="L495">                System.out.println(&quot;Description: &quot; + education.getDescription());</span>
+<span class="nc" id="L496">                System.out.println(&quot;-----&quot;);</span>
+<span class="nc" id="L497">            }</span>
+<span class="nc" id="L498">            System.out.println(&quot;\nSkills:&quot;);</span>
+<span class="nc bnc" id="L499" title="All 2 branches missed.">            for (String skill : plugin.getSkills()) {</span>
+<span class="nc" id="L500">                System.out.println(skill);</span>
+<span class="nc" id="L501">            }</span>
+
+<span class="nc" id="L503">            System.out.println(&quot;\nEXPERIENCE:&quot;);</span>
+<span class="nc bnc" id="L504" title="All 2 branches missed.">            for (Experience exp : plugin.getExperience()) {</span>
+<span class="nc" id="L505">                System.out.println(&quot;Title: &quot; + exp.getTitle());</span>
+<span class="nc" id="L506">                System.out.println(&quot;Position: &quot; + exp.getPosition());</span>
+<span class="nc" id="L507">                System.out.println(&quot;Location: &quot; + exp.getLocation());</span>
+<span class="nc" id="L508">                System.out.println(&quot;StartDate: &quot; + exp.getStartDate());</span>
+<span class="nc" id="L509">                System.out.println(&quot;EndDate: &quot; + exp.getEndDate());</span>
+<span class="nc" id="L510">                System.out.println(&quot;Description: &quot; + exp.getDescription());</span>
+<span class="nc" id="L511">                System.out.println(&quot;-----&quot;);</span>
+<span class="nc" id="L512">            }</span>
+
+<span class="nc" id="L514">            System.out.println(&quot;\nPROJECTS:&quot;);</span>
+<span class="nc bnc" id="L515" title="All 2 branches missed.">            for (Project project : plugin.getProject()) {</span>
+                // Assuming Project class has a suitable toString() method
+<span class="nc" id="L517">                System.out.println(&quot;Title: &quot; + project.getTitle());</span>
+<span class="nc" id="L518">                System.out.println(&quot;Skills: &quot; + project.getSkills());</span>
+<span class="nc" id="L519">                System.out.println(&quot;StartDate: &quot; + project.getStartDate());</span>
+<span class="nc" id="L520">                System.out.println(&quot;EndDate: &quot; + project.getEndDate());</span>
+<span class="nc" id="L521">                System.out.println(&quot;Description: &quot; + project.getDescription());</span>
+<span class="nc" id="L522">                System.out.println(&quot;-----&quot;);</span>
+<span class="nc" id="L523">            }</span>
+<span class="nc" id="L524">        } catch (IOException e) {</span>
+<span class="nc" id="L525">            e.printStackTrace();</span>
+<span class="nc" id="L526">        }</span>
+<span class="nc" id="L527">    }</span>
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

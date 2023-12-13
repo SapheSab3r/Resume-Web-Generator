@@ -11,214 +11,215 @@ import java.util.Arrays;
 import java.util.List;
 
 import anqi.chen.framework.DataPlugin;
+import anqi.chen.framework.Education;
 import anqi.chen.framework.Experience;
 import anqi.chen.framework.ResumeFramework;
 import anqi.chen.framework.Project;
 
-<span class="nc" id="L18">public class TextPlugin implements DataPlugin {</span>
+<span class="nc" id="L19">public class TextPlugin implements DataPlugin {</span>
 
     private List&lt;String&gt; splitDocumentText;
 
     @Override
     public void onRegister(ResumeFramework framework) {
 
-<span class="nc" id="L25">    }</span>
+<span class="nc" id="L26">    }</span>
 
     @Override
     public void parseDataResource(String path) throws IOException {
 
-<span class="nc" id="L30">        Path temp_path = Paths.get(path);</span>
+<span class="nc" id="L31">        Path temp_path = Paths.get(path);</span>
 
         // To read file to byte array
-<span class="nc" id="L33">        byte[] bytes = Files.readAllBytes(temp_path);</span>
+<span class="nc" id="L34">        byte[] bytes = Files.readAllBytes(temp_path);</span>
 
         // Display message only
-<span class="nc" id="L36">        System.out.println(</span>
+<span class="nc" id="L37">        System.out.println(</span>
                 &quot;Read text file using Files class&quot;);
 
         // Reading the file to String List
 
         // Creating a List class object of string type
         // as data in file to be read is words
-<span class="nc" id="L43">        this.splitDocumentText = Files.readAllLines(</span>
+<span class="nc" id="L44">        this.splitDocumentText = Files.readAllLines(</span>
                 temp_path, StandardCharsets.UTF_8);
-<span class="nc" id="L45">        System.out.println(this.splitDocumentText);</span>
-<span class="nc" id="L46">    }</span>
+<span class="nc" id="L46">        System.out.println(this.splitDocumentText);</span>
+<span class="nc" id="L47">    }</span>
 
     @Override
     public String getPluginName() {
-<span class="nc" id="L50">        return &quot;TXT&quot;;</span>
+<span class="nc" id="L51">        return &quot;TXT&quot;;</span>
     }
 
     @Override
     public String getFirstName() {
-<span class="nc" id="L55">        String info = splitDocumentText.get(0);</span>
-<span class="nc" id="L56">        String[] splitName = info.split(&quot; &quot;);</span>
+<span class="nc" id="L56">        String info = splitDocumentText.get(0);</span>
+<span class="nc" id="L57">        String[] splitName = info.split(&quot; &quot;);</span>
         ;
-<span class="nc" id="L58">        return splitName[0];</span>
+<span class="nc" id="L59">        return splitName[0];</span>
     }
 
     @Override
     public String getLastName() {
-<span class="nc" id="L63">        String info = splitDocumentText.get(0);</span>
-<span class="nc" id="L64">        String[] splitName = info.split(&quot; &quot;);</span>
+<span class="nc" id="L64">        String info = splitDocumentText.get(0);</span>
+<span class="nc" id="L65">        String[] splitName = info.split(&quot; &quot;);</span>
         ;
-<span class="nc" id="L66">        return splitName[1];</span>
+<span class="nc" id="L67">        return splitName[1];</span>
     }
 
     @Override
     public String getEmail() {
-<span class="nc" id="L71">        String info = splitDocumentText.get(1);</span>
-<span class="nc" id="L72">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
-<span class="nc" id="L73">        return splitInfo[1];</span>
+<span class="nc" id="L72">        String info = splitDocumentText.get(1);</span>
+<span class="nc" id="L73">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
+<span class="nc" id="L74">        return splitInfo[1];</span>
     }
 
     @Override
     public String getPhoneNumber() {
-<span class="nc" id="L78">        String info = splitDocumentText.get(1);</span>
-<span class="nc" id="L79">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
-<span class="nc" id="L80">        return splitInfo[0];</span>
+<span class="nc" id="L79">        String info = splitDocumentText.get(1);</span>
+<span class="nc" id="L80">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
+<span class="nc" id="L81">        return splitInfo[0];</span>
     }
 
     @Override
     public String getURL() {
-<span class="nc" id="L85">        String info = splitDocumentText.get(1);</span>
-<span class="nc" id="L86">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
-<span class="nc" id="L87">        return splitInfo[2];</span>
+<span class="nc" id="L86">        String info = splitDocumentText.get(1);</span>
+<span class="nc" id="L87">        String[] splitInfo = info.split(&quot; +\\| +&quot;);</span>
+<span class="nc" id="L88">        return splitInfo[2];</span>
     }
 
     @Override
     public List&lt;String&gt; getSkills() {
-<span class="nc" id="L92">        int startIdx = -1;</span>
-<span class="nc" id="L93">        List&lt;String&gt; skills = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.size(); i++) {</span>
-<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (splitDocumentText.get(i).trim().equals(&quot;SKILLS&quot;)) {</span>
-<span class="nc" id="L96">                startIdx = i;</span>
-<span class="nc" id="L97">                break;</span>
+<span class="nc" id="L93">        int startIdx = -1;</span>
+<span class="nc" id="L94">        List&lt;String&gt; skills = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.size(); i++) {</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">            if (splitDocumentText.get(i).trim().equals(&quot;SKILLS&quot;)) {</span>
+<span class="nc" id="L97">                startIdx = i;</span>
+<span class="nc" id="L98">                break;</span>
             }
         }
-<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (startIdx == -1) {</span>
-<span class="nc" id="L101">            return null;</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (startIdx == -1) {</span>
+<span class="nc" id="L102">            return null;</span>
         }
-<span class="nc" id="L103">        startIdx += 1;</span>
-<span class="nc bnc" id="L104" title="All 4 branches missed.">        while (startIdx &lt; splitDocumentText.size() &amp;&amp; splitDocumentText.get(startIdx).trim() != &quot;&quot;) {</span>
-<span class="nc" id="L105">            String skillLine = splitDocumentText.get(startIdx);</span>
-<span class="nc" id="L106">            String[] splitSkillLine = skillLine.split(&quot;[:,]&quot;);</span>
-<span class="nc bnc" id="L107" title="All 2 branches missed.">            for (int j = 1; j &lt; splitSkillLine.length; j++) {</span>
-<span class="nc" id="L108">                skills.add(splitSkillLine[j].trim());</span>
+<span class="nc" id="L104">        startIdx += 1;</span>
+<span class="nc bnc" id="L105" title="All 4 branches missed.">        while (startIdx &lt; splitDocumentText.size() &amp;&amp; splitDocumentText.get(startIdx).trim() != &quot;&quot;) {</span>
+<span class="nc" id="L106">            String skillLine = splitDocumentText.get(startIdx);</span>
+<span class="nc" id="L107">            String[] splitSkillLine = skillLine.split(&quot;[:,]&quot;);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            for (int j = 1; j &lt; splitSkillLine.length; j++) {</span>
+<span class="nc" id="L109">                skills.add(splitSkillLine[j].trim());</span>
             }
-<span class="nc" id="L110">            startIdx++;</span>
-<span class="nc" id="L111">        }</span>
-<span class="nc" id="L112">        return skills;</span>
+<span class="nc" id="L111">            startIdx++;</span>
+<span class="nc" id="L112">        }</span>
+<span class="nc" id="L113">        return skills;</span>
     }
 
     private Experience createExperience(int startIdx) {
-<span class="nc" id="L116">        String[] splitTitle = splitDocumentText.get(startIdx).split(&quot; &quot;);</span>
-<span class="nc" id="L117">        System.out.println();</span>
-<span class="nc" id="L118">        String[] splitDate = splitDocumentText.get(startIdx + 2).split(&quot; - &quot;);</span>
-<span class="nc" id="L119">        String title = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, 0, splitTitle.length - 2)).trim();</span>
-<span class="nc" id="L120">        String location = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, splitTitle.length - 2, splitTitle.length))</span>
-<span class="nc" id="L121">                .trim();</span>
-<span class="nc" id="L122">        String position = splitDocumentText.get(startIdx + 1).trim();</span>
-<span class="nc" id="L123">        String startDate = splitDate[0].trim();</span>
-<span class="nc" id="L124">        String endDate = splitDate[splitDate.length - 1].trim();</span>
+<span class="nc" id="L117">        String[] splitTitle = splitDocumentText.get(startIdx).split(&quot; &quot;);</span>
+<span class="nc" id="L118">        System.out.println();</span>
+<span class="nc" id="L119">        String[] splitDate = splitDocumentText.get(startIdx + 2).split(&quot; - &quot;);</span>
+<span class="nc" id="L120">        String title = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, 0, splitTitle.length - 2)).trim();</span>
+<span class="nc" id="L121">        String location = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, splitTitle.length - 2, splitTitle.length))</span>
+<span class="nc" id="L122">                .trim();</span>
+<span class="nc" id="L123">        String position = splitDocumentText.get(startIdx + 1).trim();</span>
+<span class="nc" id="L124">        String startDate = splitDate[0].trim();</span>
+<span class="nc" id="L125">        String endDate = splitDate[splitDate.length - 1].trim();</span>
 
-<span class="nc" id="L126">        List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L127">        startIdx = startIdx + 3;</span>
+<span class="nc" id="L127">        List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L128">        startIdx = startIdx + 3;</span>
         // System.out.println(title);
         // System.out.println(position);
         // System.out.println(location);
         // System.out.println(startDate);
         // System.out.println(endDate);
-<span class="nc bnc" id="L133" title="All 4 branches missed.">        while (startIdx &lt; splitDocumentText.size() &amp;&amp; splitDocumentText.get(startIdx).trim() != &quot;&quot;) {</span>
-<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (splitDocumentText.get(startIdx).trim().equals(&quot;&quot;)) {</span>
-<span class="nc" id="L135">                break;</span>
+<span class="nc bnc" id="L134" title="All 4 branches missed.">        while (startIdx &lt; splitDocumentText.size() &amp;&amp; splitDocumentText.get(startIdx).trim() != &quot;&quot;) {</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (splitDocumentText.get(startIdx).trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L136">                break;</span>
             }
-<span class="nc" id="L137">            String cleanText = splitDocumentText.get(startIdx).replace(&quot;\u2022 &quot;, &quot;&quot;);</span>
-<span class="nc" id="L138">            descriptions.add(cleanText.trim());</span>
-<span class="nc" id="L139">            startIdx++;</span>
-<span class="nc" id="L140">        }</span>
+<span class="nc" id="L138">            String cleanText = splitDocumentText.get(startIdx).replace(&quot;\u2022 &quot;, &quot;&quot;);</span>
+<span class="nc" id="L139">            descriptions.add(cleanText.trim());</span>
+<span class="nc" id="L140">            startIdx++;</span>
+<span class="nc" id="L141">        }</span>
         // System.out.println(descriptions);
-<span class="nc" id="L142">        return new Experience(title, position, location, startDate, endDate, descriptions);</span>
+<span class="nc" id="L143">        return new Experience(title, position, location, startDate, endDate, descriptions);</span>
     }
 
     @Override
     public List&lt;Experience&gt; getExperience() {
         // System.out.println(&quot;--------&quot;);
-<span class="nc" id="L148">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L149">        List&lt;Experience&gt; experiences = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L149">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L150">        List&lt;Experience&gt; experiences = new ArrayList&lt;&gt;();</span>
 
-<span class="nc bnc" id="L151" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.size(); i++) {</span>
-<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (splitDocumentText.get(i).trim().equals(&quot;EDUCATION&quot;) ||</span>
-<span class="nc bnc" id="L153" title="All 2 branches missed.">                    splitDocumentText.get(i).trim().equals(&quot;EXPERIENCE&quot;) ||</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">                    splitDocumentText.get(i).trim().equals(&quot;&quot;)) {</span>
-<span class="nc bnc" id="L155" title="All 2 branches missed.">                if (splitDocumentText.get(i + 1).split(&quot; &quot;).length &gt; 1) {</span>
-<span class="nc" id="L156">                    startIdxs.add(i + 1);</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.size(); i++) {</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (splitDocumentText.get(i).trim().equals(&quot;EDUCATION&quot;) ||</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                    splitDocumentText.get(i).trim().equals(&quot;EXPERIENCE&quot;) ||</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                    splitDocumentText.get(i).trim().equals(&quot;&quot;)) {</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                if (splitDocumentText.get(i + 1).split(&quot; &quot;).length &gt; 1) {</span>
+<span class="nc" id="L157">                    startIdxs.add(i + 1);</span>
                 }
             }
         }
         // System.out.println(&quot;********&quot;);
-<span class="nc bnc" id="L161" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
-<span class="nc" id="L162">            experiences.add(createExperience(idx));</span>
-<span class="nc" id="L163">        }</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
+<span class="nc" id="L163">            experiences.add(createExperience(idx));</span>
+<span class="nc" id="L164">        }</span>
         // System.out.println(&quot;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&quot;);
-<span class="nc" id="L165">        return experiences;</span>
+<span class="nc" id="L166">        return experiences;</span>
     }
 
     @Override
     public List&lt;Project&gt; getProject() {
-<span class="nc" id="L170">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L171">        List&lt;Project&gt; projects = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L171">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L172">        List&lt;Project&gt; projects = new ArrayList&lt;&gt;();</span>
 
-<span class="nc bnc" id="L173" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.size(); i++) {</span>
-<span class="nc bnc" id="L174" title="All 2 branches missed.">            if (splitDocumentText.get(i).trim().startsWith(&quot;PROJECT&quot;)) {</span>
-<span class="nc" id="L175">                startIdxs.add(i);</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        for (int i = 0; i &lt; splitDocumentText.size(); i++) {</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            if (splitDocumentText.get(i).trim().startsWith(&quot;PROJECT&quot;)) {</span>
+<span class="nc" id="L176">                startIdxs.add(i);</span>
             }
         }
 
-<span class="nc bnc" id="L179" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
-<span class="nc" id="L180">            projects.add(createProject(idx));</span>
-<span class="nc" id="L181">        }</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
+<span class="nc" id="L181">            projects.add(createProject(idx));</span>
+<span class="nc" id="L182">        }</span>
 
-<span class="nc" id="L183">        return projects;</span>
+<span class="nc" id="L184">        return projects;</span>
     }
 
     private Project createProject(int startIdx) {
-<span class="nc" id="L187">        String projectInfo = splitDocumentText.get(startIdx + 1); // Line with project title and skills</span>
-<span class="nc" id="L188">        String[] titleAndSkills = projectInfo.split(&quot;\\|&quot;);</span>
-<span class="nc" id="L189">        String title = titleAndSkills[0].trim();</span>
-<span class="nc" id="L190">        String[] skillsArray = titleAndSkills[1].split(&quot;,&quot;);</span>
-<span class="nc" id="L191">        List&lt;String&gt; skills = Arrays.asList(skillsArray);</span>
+<span class="nc" id="L188">        String projectInfo = splitDocumentText.get(startIdx + 1); // Line with project title and skills</span>
+<span class="nc" id="L189">        String[] titleAndSkills = projectInfo.split(&quot;\\|&quot;);</span>
+<span class="nc" id="L190">        String title = titleAndSkills[0].trim();</span>
+<span class="nc" id="L191">        String[] skillsArray = titleAndSkills[1].split(&quot;,&quot;);</span>
+<span class="nc" id="L192">        List&lt;String&gt; skills = Arrays.asList(skillsArray);</span>
 
-<span class="nc" id="L193">        String position = splitDocumentText.get(startIdx + 2).trim(); // Line with position</span>
+<span class="nc" id="L194">        String position = splitDocumentText.get(startIdx + 2).trim(); // Line with position</span>
 
-<span class="nc" id="L195">        String dateRange = splitDocumentText.get(startIdx + 3).trim(); // Line with date range</span>
-<span class="nc" id="L196">        String[] dateRangeParts = dateRange.split(&quot; - &quot;);</span>
-<span class="nc" id="L197">        String startDate = dateRangeParts[0].trim();</span>
-<span class="nc" id="L198">        String endDate = dateRangeParts[1].trim();</span>
+<span class="nc" id="L196">        String dateRange = splitDocumentText.get(startIdx + 3).trim(); // Line with date range</span>
+<span class="nc" id="L197">        String[] dateRangeParts = dateRange.split(&quot; - &quot;);</span>
+<span class="nc" id="L198">        String startDate = dateRangeParts[0].trim();</span>
+<span class="nc" id="L199">        String endDate = dateRangeParts[1].trim();</span>
 
-<span class="nc" id="L200">        List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L201">        int currentIndex = startIdx + 4;</span>
+<span class="nc" id="L201">        List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L202">        int currentIndex = startIdx + 4;</span>
 
-<span class="nc bnc" id="L203" title="All 4 branches missed.">        while (currentIndex &lt; splitDocumentText.size() &amp;&amp; !splitDocumentText.get(currentIndex).trim().isEmpty()) {</span>
-<span class="nc" id="L204">            String description = splitDocumentText.get(currentIndex).trim();</span>
-<span class="nc" id="L205">            descriptions.add(description);</span>
-<span class="nc" id="L206">            currentIndex++;</span>
-<span class="nc" id="L207">        }</span>
+<span class="nc bnc" id="L204" title="All 4 branches missed.">        while (currentIndex &lt; splitDocumentText.size() &amp;&amp; !splitDocumentText.get(currentIndex).trim().isEmpty()) {</span>
+<span class="nc" id="L205">            String description = splitDocumentText.get(currentIndex).trim();</span>
+<span class="nc" id="L206">            descriptions.add(description);</span>
+<span class="nc" id="L207">            currentIndex++;</span>
+<span class="nc" id="L208">        }</span>
 
-<span class="nc" id="L209">        return new Project(title, skills, position, startDate, endDate, descriptions);</span>
+<span class="nc" id="L210">        return new Project(title, skills, startDate, endDate, descriptions);</span>
     }
 
     public static void main(String args[]) throws IOException {
         // Assuming the file is located at
         // D:\Destop\ResumeProject\backend\src\test\resources\test.txt
-<span class="nc" id="L215">        Path temp_path = Paths.get(&quot;D:/Destop/ResumeProject/backend/src/test/resources/test.txt&quot;);</span>
+<span class="nc" id="L216">        Path temp_path = Paths.get(&quot;D:/Destop/ResumeProject/backend/src/test/resources/test.txt&quot;);</span>
 
         // To read file to byte array
-<span class="nc" id="L218">        byte[] bytes = Files.readAllBytes(temp_path);</span>
+<span class="nc" id="L219">        byte[] bytes = Files.readAllBytes(temp_path);</span>
 
         // Display message only
-<span class="nc" id="L221">        System.out.println(</span>
+<span class="nc" id="L222">        System.out.println(</span>
                 &quot;Read text file using Files class&quot;);
 
         // Reading the file to String List
@@ -226,53 +227,59 @@ import anqi.chen.framework.Project;
 
         // Creating a List class object of string type
         // as data in file to be read is words
-<span class="nc" id="L229">        List&lt;String&gt; allLines = Files.readAllLines(</span>
+<span class="nc" id="L230">        List&lt;String&gt; allLines = Files.readAllLines(</span>
                 temp_path, StandardCharsets.UTF_8);
-<span class="nc" id="L231">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L232">        List&lt;Experience&gt; experiences = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L232">        List&lt;Integer&gt; startIdxs = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L233">        List&lt;Experience&gt; experiences = new ArrayList&lt;&gt;();</span>
 
-<span class="nc bnc" id="L234" title="All 2 branches missed.">        for (int i = 0; i &lt; allLines.size(); i++) {</span>
-<span class="nc bnc" id="L235" title="All 2 branches missed.">            if (allLines.get(i).trim().equals(&quot;EDUCATION&quot;) ||</span>
-<span class="nc bnc" id="L236" title="All 2 branches missed.">                    allLines.get(i).trim().equals(&quot;EXPERIENCE&quot;) ||</span>
-<span class="nc bnc" id="L237" title="All 2 branches missed.">                    allLines.get(i).trim().equals(&quot;&quot;)) {</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (allLines.get(i + 1).split(&quot; &quot;).length &gt; 1) {</span>
-<span class="nc" id="L239">                    startIdxs.add(i + 1);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        for (int i = 0; i &lt; allLines.size(); i++) {</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            if (allLines.get(i).trim().equals(&quot;EDUCATION&quot;) ||</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                    allLines.get(i).trim().equals(&quot;EXPERIENCE&quot;) ||</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                    allLines.get(i).trim().equals(&quot;&quot;)) {</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">                if (allLines.get(i + 1).split(&quot; &quot;).length &gt; 1) {</span>
+<span class="nc" id="L240">                    startIdxs.add(i + 1);</span>
                 }
             }
         }
-<span class="nc" id="L243">        System.out.println(startIdxs);</span>
-<span class="nc bnc" id="L244" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
-<span class="nc" id="L245">            String[] splitTitle = allLines.get(idx).split(&quot; &quot;);</span>
-<span class="nc" id="L246">            System.out.println();</span>
-<span class="nc" id="L247">            String[] splitDate = allLines.get(idx + 2).split(&quot; - &quot;);</span>
-<span class="nc" id="L248">            String title = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, 0, splitTitle.length - 2)).trim();</span>
-<span class="nc" id="L249">            String location = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, splitTitle.length - 2, splitTitle.length))</span>
-<span class="nc" id="L250">                    .trim();</span>
-<span class="nc" id="L251">            String position = allLines.get(idx + 1).trim();</span>
-<span class="nc" id="L252">            String startDate = splitDate[0].trim();</span>
-<span class="nc" id="L253">            String endDate = splitDate[splitDate.length - 1].trim();</span>
+<span class="nc" id="L244">        System.out.println(startIdxs);</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">        for (int idx : startIdxs) {</span>
+<span class="nc" id="L246">            String[] splitTitle = allLines.get(idx).split(&quot; &quot;);</span>
+<span class="nc" id="L247">            System.out.println();</span>
+<span class="nc" id="L248">            String[] splitDate = allLines.get(idx + 2).split(&quot; - &quot;);</span>
+<span class="nc" id="L249">            String title = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, 0, splitTitle.length - 2)).trim();</span>
+<span class="nc" id="L250">            String location = String.join(&quot; &quot;, Arrays.copyOfRange(splitTitle, splitTitle.length - 2, splitTitle.length))</span>
+<span class="nc" id="L251">                    .trim();</span>
+<span class="nc" id="L252">            String position = allLines.get(idx + 1).trim();</span>
+<span class="nc" id="L253">            String startDate = splitDate[0].trim();</span>
+<span class="nc" id="L254">            String endDate = splitDate[splitDate.length - 1].trim();</span>
 
-<span class="nc" id="L255">            List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L256">            idx = idx + 3;</span>
-<span class="nc bnc" id="L257" title="All 4 branches missed.">            while (idx &lt; allLines.size() &amp;&amp; allLines.get(idx).trim() != &quot;&quot;) {</span>
+<span class="nc" id="L256">            List&lt;String&gt; descriptions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L257">            idx = idx + 3;</span>
+<span class="nc bnc" id="L258" title="All 4 branches missed.">            while (idx &lt; allLines.size() &amp;&amp; allLines.get(idx).trim() != &quot;&quot;) {</span>
                 // System.out.println(allLines.get(idx).trim());
-<span class="nc bnc" id="L259" title="All 2 branches missed.">                if (allLines.get(idx).trim().equals(&quot;&quot;)) {</span>
-<span class="nc" id="L260">                    break;</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">                if (allLines.get(idx).trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L261">                    break;</span>
                 }
-<span class="nc" id="L262">                String cleanText = allLines.get(idx).replace(&quot;\u2022 &quot;, &quot;&quot;);</span>
-<span class="nc" id="L263">                descriptions.add(cleanText.trim());</span>
-<span class="nc" id="L264">                idx++;</span>
-<span class="nc" id="L265">            }</span>
-<span class="nc" id="L266">            System.out.println(&quot;---------------&quot;);</span>
-<span class="nc" id="L267">            System.out.println(title);</span>
-<span class="nc" id="L268">            System.out.println(position);</span>
-<span class="nc" id="L269">            System.out.println(location);</span>
-<span class="nc" id="L270">            System.out.println(startDate);</span>
-<span class="nc" id="L271">            System.out.println(endDate);</span>
-<span class="nc" id="L272">            System.out.println(descriptions);</span>
-<span class="nc" id="L273">        }</span>
+<span class="nc" id="L263">                String cleanText = allLines.get(idx).replace(&quot;\u2022 &quot;, &quot;&quot;);</span>
+<span class="nc" id="L264">                descriptions.add(cleanText.trim());</span>
+<span class="nc" id="L265">                idx++;</span>
+<span class="nc" id="L266">            }</span>
+<span class="nc" id="L267">            System.out.println(&quot;---------------&quot;);</span>
+<span class="nc" id="L268">            System.out.println(title);</span>
+<span class="nc" id="L269">            System.out.println(position);</span>
+<span class="nc" id="L270">            System.out.println(location);</span>
+<span class="nc" id="L271">            System.out.println(startDate);</span>
+<span class="nc" id="L272">            System.out.println(endDate);</span>
+<span class="nc" id="L273">            System.out.println(descriptions);</span>
+<span class="nc" id="L274">        }</span>
 
-<span class="nc" id="L275">    }</span>
+<span class="nc" id="L276">    }</span>
+
+    @Override
+    public List&lt;Education&gt; getEducation() {
+        // TODO Auto-generated method stub
+<span class="nc" id="L281">        throw new UnsupportedOperationException(&quot;Unimplemented method 'getEducation'&quot;);</span>
+    }
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

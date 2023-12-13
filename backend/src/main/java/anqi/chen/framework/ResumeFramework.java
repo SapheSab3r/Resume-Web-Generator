@@ -11,15 +11,13 @@ import org.json.JSONObject;
 public class ResumeFramework {
     private DataPlugin currentPlugin;
     private Resume currentResume;
-    private static final HashSet<String> SIGNS = new HashSet<>(Arrays.asList(".", ",", ":", "%", "(", ")",
-            "[", "]", "?", "!", "\\", "-", "&", "*", "@", "+", "=", "-", ";"));
 
     /**
      * Set current plugin to the given plugin object.
      * 
      * @param plugin The plugin to set to.
      */
-    public void setNewPlugin(DataPlugin plugin) {
+    public void registerPlugin(DataPlugin plugin) {
         this.currentPlugin = plugin;
         this.currentResume = new Resume();
 
@@ -28,8 +26,7 @@ public class ResumeFramework {
 
     /**
      * Conduct initial parsing to the data source if needed, such as reading a local
-     * file or
-     * set up connection to an remote API.
+     * file or set up connection to an remote API.
      * 
      * @param srcPath path to the data source, it can be local file path or remote
      *                api uri. if Needed.
@@ -40,7 +37,7 @@ public class ResumeFramework {
      */
     public void setResumeDataSrc(String srcPath) throws IOException, IllegalCallerException {
         if (currentPlugin == null) {
-            throw new IllegalCallerException("You much call addNewPlugin() firstly");
+            throw new IllegalCallerException("You much call addNewPlugin() first");
         }
         currentPlugin.parseDataResource(srcPath);
     }
@@ -52,7 +49,7 @@ public class ResumeFramework {
      */
     public String getResumeData() {
         if (currentPlugin == null) {
-            throw new IllegalCallerException("You much call addNewPlugin() firstly");
+            throw new IllegalCallerException("You much call addNewPlugin() first");
         }
 
         this.buildPrimaryResume();
@@ -83,9 +80,9 @@ public class ResumeFramework {
                 .setPhoneNumber(this.currentPlugin.getPhoneNumber())
                 .setUrl(this.currentPlugin.getURL())
                 .setEduction(this.currentPlugin.getEducation())
+                .setSkills(this.currentPlugin.getSkills())
                 .setExperiences(this.currentPlugin.getExperience())
-                .setProjects(this.currentPlugin.getProject())
-                .setSkills(this.currentPlugin.getSkills());
+                .setProjects(this.currentPlugin.getProject());
         System.out.println("Get here");
     }
 }

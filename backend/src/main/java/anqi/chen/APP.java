@@ -34,7 +34,7 @@ public class APP extends NanoHTTPD {
         framework = new ResumeFramework();
         plugins = loadPlugins();
         for (DataPlugin p : plugins.values()) {
-            framework.setNewPlugin(p);
+            framework.registerPlugin(p);
         }
 
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
@@ -48,27 +48,40 @@ public class APP extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
         String uri = session.getUri();
         Map<String, String> params = session.getParms();
-        System.out.println("Request URI: " + uri);
-        System.out.println("Request Parameters: " + params);
+
+        // System.out.println("Request URI: " + uri);
+        // System.out.println("Request Parameters: " + params);
 
         JSONObject res = new JSONObject();
-        System.out.println(params.get("pluginName"));
-        System.out.println(params.get("resumePath"));
+        // System.out.println(params.get("pluginName"));
+        // System.out.println(params.get("resumePath"));
 
-        if (uri.equals("/getDataPlugins")) {
-            res.put("plugins", plugins.keySet().toArray());
-        } else if (uri.equals("/parseResume")) {
+        // Handling requests to /getDataPlugin
+        if (uri.equals("/getDataPlugin")) {
+            try {
+                res.put("plugins", plugins.keySet().toArray());
+            } catch (Exception e) {
+                System.err.println("Error putting data: " + e.getMessage());
+            }
+        }
+        // Handling requests to /parseResume
+        else if (uri.equals("/parseResume")) {
+            // check if the params are present
             if (!params.containsKey("pluginName") || !params.containsKey("resumePath")) {
+                // set error
                 res.put("status", 0);
                 res.put("resume", new JSONObject());
                 res.put("message", "Require two parameters: pluginName and resumePath");
             }
-        } else if (params.get("pluginName") == null || !this.plugins.containsKey(params.get("pluginName"))) {
+        }
+        // Check if the params exist
+        else if (params.get("pluginName") == null || !this.plugins.containsKey(params.get("pluginName"))) {
             res.put("status", 0);
             res.put("resume", new JSONObject());
             res.put("message", "there is no such data plugin: " + params.get("pluginName"));
         } else {
-            framework.setNewPlugin(plugins.get(params.get("pluginName")));
+            // Register the specified plugin and attempt to process the resume
+            framework.registerPlugin(plugins.get(params.get("pluginName")));
             try {
                 framework.setResumeDataSrc(params.get("resumePath"));
                 res.put("status", 1);

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import anqi.chen.framework.DataPlugin;
+import anqi.chen.framework.Education;
 import anqi.chen.framework.Experience;
 import anqi.chen.framework.ResumeFramework;
 import anqi.chen.framework.Project;
@@ -206,7 +207,7 @@ public class TextPlugin implements DataPlugin {
             currentIndex++;
         }
 
-        return new Project(title, skills, position, startDate, endDate, descriptions);
+        return new Project(title, skills, startDate, endDate, descriptions);
     }
 
     public static void main(String args[]) throws IOException {
@@ -272,6 +273,12 @@ public class TextPlugin implements DataPlugin {
             System.out.println(descriptions);
         }
 
+    }
+
+    @Override
+    public List<Education> getEducation() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEducation'");
     }
 
 }

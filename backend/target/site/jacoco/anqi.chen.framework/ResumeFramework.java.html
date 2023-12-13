@@ -11,25 +11,22 @@ import org.json.JSONObject;
 <span class="nc" id="L11">public class ResumeFramework {</span>
     private DataPlugin currentPlugin;
     private Resume currentResume;
-<span class="nc" id="L14">    private static final HashSet&lt;String&gt; SIGNS = new HashSet&lt;&gt;(Arrays.asList(&quot;.&quot;, &quot;,&quot;, &quot;:&quot;, &quot;%&quot;, &quot;(&quot;, &quot;)&quot;,</span>
-            &quot;[&quot;, &quot;]&quot;, &quot;?&quot;, &quot;!&quot;, &quot;\\&quot;, &quot;-&quot;, &quot;&amp;&quot;, &quot;*&quot;, &quot;@&quot;, &quot;+&quot;, &quot;=&quot;, &quot;-&quot;, &quot;;&quot;));
 
     /**
      * Set current plugin to the given plugin object.
      * 
      * @param plugin The plugin to set to.
      */
-    public void setNewPlugin(DataPlugin plugin) {
-<span class="nc" id="L23">        this.currentPlugin = plugin;</span>
-<span class="nc" id="L24">        this.currentResume = new Resume();</span>
+    public void registerPlugin(DataPlugin plugin) {
+<span class="nc" id="L21">        this.currentPlugin = plugin;</span>
+<span class="nc" id="L22">        this.currentResume = new Resume();</span>
 
-<span class="nc" id="L26">        this.currentPlugin.onRegister(this);</span>
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L24">        this.currentPlugin.onRegister(this);</span>
+<span class="nc" id="L25">    }</span>
 
     /**
      * Conduct initial parsing to the data source if needed, such as reading a local
-     * file or
-     * set up connection to an remote API.
+     * file or set up connection to an remote API.
      * 
      * @param srcPath path to the data source, it can be local file path or remote
      *                api uri. if Needed.
@@ -39,11 +36,11 @@ import org.json.JSONObject;
      *                                set.
      */
     public void setResumeDataSrc(String srcPath) throws IOException, IllegalCallerException {
-<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (currentPlugin == null) {</span>
-<span class="nc" id="L43">            throw new IllegalCallerException(&quot;You much call addNewPlugin() firstly&quot;);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (currentPlugin == null) {</span>
+<span class="nc" id="L40">            throw new IllegalCallerException(&quot;You much call addNewPlugin() first&quot;);</span>
         }
-<span class="nc" id="L45">        currentPlugin.parseDataResource(srcPath);</span>
-<span class="nc" id="L46">    }</span>
+<span class="nc" id="L42">        currentPlugin.parseDataResource(srcPath);</span>
+<span class="nc" id="L43">    }</span>
 
     /**
      * Get processed Resume data in String format.
@@ -51,13 +48,13 @@ import org.json.JSONObject;
      * @return precessed resume data in string format.
      */
     public String getResumeData() {
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (currentPlugin == null) {</span>
-<span class="nc" id="L55">            throw new IllegalCallerException(&quot;You much call addNewPlugin() firstly&quot;);</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (currentPlugin == null) {</span>
+<span class="nc" id="L52">            throw new IllegalCallerException(&quot;You much call addNewPlugin() first&quot;);</span>
         }
 
-<span class="nc" id="L58">        this.buildPrimaryResume();</span>
+<span class="nc" id="L55">        this.buildPrimaryResume();</span>
 
-<span class="nc" id="L60">        return this.currentResume.buildJsonString();</span>
+<span class="nc" id="L57">        return this.currentResume.buildJsonString();</span>
 
     }
 
@@ -67,25 +64,26 @@ import org.json.JSONObject;
      * @return processed resume data in json object format.
      */
     public JSONObject getResumeDataInJsonObject() {
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (currentPlugin == null) {</span>
-<span class="nc" id="L71">            throw new IllegalCallerException(&quot;You much call addNewPlugin() firstly&quot;);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (currentPlugin == null) {</span>
+<span class="nc" id="L68">            throw new IllegalCallerException(&quot;You much call addNewPlugin() firstly&quot;);</span>
         }
 
-<span class="nc" id="L74">        this.buildPrimaryResume();</span>
-<span class="nc" id="L75">        return this.currentResume.buildJsonObject();</span>
+<span class="nc" id="L71">        this.buildPrimaryResume();</span>
+<span class="nc" id="L72">        return this.currentResume.buildJsonObject();</span>
     }
 
     private void buildPrimaryResume() {
-<span class="nc" id="L79">        this.currentResume</span>
-<span class="nc" id="L80">                .setEmail(this.currentPlugin.getEmail())</span>
-<span class="nc" id="L81">                .setFirstName(this.currentPlugin.getFirstName())</span>
-<span class="nc" id="L82">                .setLastName(this.currentPlugin.getLastName())</span>
-<span class="nc" id="L83">                .setPhoneNumber(this.currentPlugin.getPhoneNumber())</span>
-<span class="nc" id="L84">                .setUrl(this.currentPlugin.getURL())</span>
-<span class="nc" id="L85">                .setExperiences(this.currentPlugin.getExperience())</span>
-<span class="nc" id="L86">                .setProjects(this.currentPlugin.getProject())</span>
-<span class="nc" id="L87">                .setSkills(this.currentPlugin.getSkills());</span>
-<span class="nc" id="L88">        System.out.println(&quot;Get here&quot;);</span>
-<span class="nc" id="L89">    }</span>
+<span class="nc" id="L76">        this.currentResume</span>
+<span class="nc" id="L77">                .setEmail(this.currentPlugin.getEmail())</span>
+<span class="nc" id="L78">                .setFirstName(this.currentPlugin.getFirstName())</span>
+<span class="nc" id="L79">                .setLastName(this.currentPlugin.getLastName())</span>
+<span class="nc" id="L80">                .setPhoneNumber(this.currentPlugin.getPhoneNumber())</span>
+<span class="nc" id="L81">                .setUrl(this.currentPlugin.getURL())</span>
+<span class="nc" id="L82">                .setEduction(this.currentPlugin.getEducation())</span>
+<span class="nc" id="L83">                .setSkills(this.currentPlugin.getSkills())</span>
+<span class="nc" id="L84">                .setExperiences(this.currentPlugin.getExperience())</span>
+<span class="nc" id="L85">                .setProjects(this.currentPlugin.getProject());</span>
+<span class="nc" id="L86">        System.out.println(&quot;Get here&quot;);</span>
+<span class="nc" id="L87">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -34,7 +34,7 @@ public class APP extends NanoHTTPD {
 <span class="nc" id="L34">        framework = new ResumeFramework();</span>
 <span class="nc" id="L35">        plugins = loadPlugins();</span>
 <span class="nc bnc" id="L36" title="All 2 branches missed.">        for (DataPlugin p : plugins.values()) {</span>
-<span class="nc" id="L37">            framework.setNewPlugin(p);</span>
+<span class="nc" id="L37">            framework.registerPlugin(p);</span>
 <span class="nc" id="L38">        }</span>
 
 <span class="nc" id="L40">        start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);</span>
@@ -48,50 +48,63 @@ public class APP extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
 <span class="nc" id="L49">        String uri = session.getUri();</span>
 <span class="nc" id="L50">        Map&lt;String, String&gt; params = session.getParms();</span>
-<span class="nc" id="L51">        System.out.println(&quot;Request URI: &quot; + uri);</span>
-<span class="nc" id="L52">        System.out.println(&quot;Request Parameters: &quot; + params);</span>
 
-<span class="nc" id="L54">        JSONObject res = new JSONObject();</span>
-<span class="nc" id="L55">        System.out.println(params.get(&quot;pluginName&quot;));</span>
-<span class="nc" id="L56">        System.out.println(params.get(&quot;resumePath&quot;));</span>
+        // System.out.println(&quot;Request URI: &quot; + uri);
+        // System.out.println(&quot;Request Parameters: &quot; + params);
 
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (uri.equals(&quot;/getDataPlugins&quot;)) {</span>
-<span class="nc" id="L59">            res.put(&quot;plugins&quot;, plugins.keySet().toArray());</span>
-<span class="nc bnc" id="L60" title="All 2 branches missed.">        } else if (uri.equals(&quot;/parseResume&quot;)) {</span>
-<span class="nc bnc" id="L61" title="All 4 branches missed.">            if (!params.containsKey(&quot;pluginName&quot;) || !params.containsKey(&quot;resumePath&quot;)) {</span>
-<span class="nc" id="L62">                res.put(&quot;status&quot;, 0);</span>
-<span class="nc" id="L63">                res.put(&quot;resume&quot;, new JSONObject());</span>
-<span class="nc" id="L64">                res.put(&quot;message&quot;, &quot;Require two parameters: pluginName and resumePath&quot;);</span>
-            }
-<span class="nc bnc" id="L66" title="All 4 branches missed.">        } else if (params.get(&quot;pluginName&quot;) == null || !this.plugins.containsKey(params.get(&quot;pluginName&quot;))) {</span>
-<span class="nc" id="L67">            res.put(&quot;status&quot;, 0);</span>
-<span class="nc" id="L68">            res.put(&quot;resume&quot;, new JSONObject());</span>
-<span class="nc" id="L69">            res.put(&quot;message&quot;, &quot;there is no such data plugin: &quot; + params.get(&quot;pluginName&quot;));</span>
-        } else {
-<span class="nc" id="L71">            framework.setNewPlugin(plugins.get(params.get(&quot;pluginName&quot;)));</span>
+<span class="nc" id="L55">        JSONObject res = new JSONObject();</span>
+        // System.out.println(params.get(&quot;pluginName&quot;));
+        // System.out.println(params.get(&quot;resumePath&quot;));
+
+        // Handling requests to /getDataPlugin
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (uri.equals(&quot;/getDataPlugin&quot;)) {</span>
             try {
-<span class="nc" id="L73">                framework.setResumeDataSrc(params.get(&quot;resumePath&quot;));</span>
-<span class="nc" id="L74">                res.put(&quot;status&quot;, 1);</span>
-<span class="nc" id="L75">                res.put(&quot;resume&quot;, framework.getResumeDataInJsonObject());</span>
-<span class="nc" id="L76">                res.put(&quot;message&quot;, &quot;success&quot;);</span>
-<span class="nc" id="L77">            } catch (IOException e) {</span>
-<span class="nc" id="L78">                res.put(&quot;message&quot;, e.getMessage());</span>
-<span class="nc" id="L79">                res.put(&quot;status&quot;, 0);</span>
-<span class="nc" id="L80">                res.put(&quot;resume&quot;, new JSONObject());</span>
-<span class="nc" id="L81">                System.out.println(&quot;opps&quot;);</span>
-<span class="nc" id="L82">                res.put(&quot;message&quot;, &quot;Failed to parse your resume. Please refer to the examples.&quot; + e.getMessage());</span>
-<span class="nc" id="L83">            } catch (Exception e) {</span>
-<span class="nc" id="L84">                res.put(&quot;status&quot;, 0);</span>
-<span class="nc" id="L85">                System.out.println(&quot;uh?&quot;);</span>
-<span class="nc" id="L86">                res.put(&quot;resume&quot;, new JSONObject());</span>
-<span class="nc" id="L87">            }</span>
+<span class="nc" id="L62">                res.put(&quot;plugins&quot;, plugins.keySet().toArray());</span>
+<span class="nc" id="L63">            } catch (Exception e) {</span>
+<span class="nc" id="L64">                System.err.println(&quot;Error putting data: &quot; + e.getMessage());</span>
+<span class="nc" id="L65">            }</span>
+        }
+        // Handling requests to /parseResume
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        else if (uri.equals(&quot;/parseResume&quot;)) {</span>
+            // check if the params are present
+<span class="nc bnc" id="L70" title="All 4 branches missed.">            if (!params.containsKey(&quot;pluginName&quot;) || !params.containsKey(&quot;resumePath&quot;)) {</span>
+                // set error
+<span class="nc" id="L72">                res.put(&quot;status&quot;, 0);</span>
+<span class="nc" id="L73">                res.put(&quot;resume&quot;, new JSONObject());</span>
+<span class="nc" id="L74">                res.put(&quot;message&quot;, &quot;Require two parameters: pluginName and resumePath&quot;);</span>
+            }
+        }
+        // Check if the params exist
+<span class="nc bnc" id="L78" title="All 4 branches missed.">        else if (params.get(&quot;pluginName&quot;) == null || !this.plugins.containsKey(params.get(&quot;pluginName&quot;))) {</span>
+<span class="nc" id="L79">            res.put(&quot;status&quot;, 0);</span>
+<span class="nc" id="L80">            res.put(&quot;resume&quot;, new JSONObject());</span>
+<span class="nc" id="L81">            res.put(&quot;message&quot;, &quot;there is no such data plugin: &quot; + params.get(&quot;pluginName&quot;));</span>
+        } else {
+            // Register the specified plugin and attempt to process the resume
+<span class="nc" id="L84">            framework.registerPlugin(plugins.get(params.get(&quot;pluginName&quot;)));</span>
+            try {
+<span class="nc" id="L86">                framework.setResumeDataSrc(params.get(&quot;resumePath&quot;));</span>
+<span class="nc" id="L87">                res.put(&quot;status&quot;, 1);</span>
+<span class="nc" id="L88">                res.put(&quot;resume&quot;, framework.getResumeDataInJsonObject());</span>
+<span class="nc" id="L89">                res.put(&quot;message&quot;, &quot;success&quot;);</span>
+<span class="nc" id="L90">            } catch (IOException e) {</span>
+<span class="nc" id="L91">                res.put(&quot;message&quot;, e.getMessage());</span>
+<span class="nc" id="L92">                res.put(&quot;status&quot;, 0);</span>
+<span class="nc" id="L93">                res.put(&quot;resume&quot;, new JSONObject());</span>
+<span class="nc" id="L94">                System.out.println(&quot;opps&quot;);</span>
+<span class="nc" id="L95">                res.put(&quot;message&quot;, &quot;Failed to parse your resume. Please refer to the examples.&quot; + e.getMessage());</span>
+<span class="nc" id="L96">            } catch (Exception e) {</span>
+<span class="nc" id="L97">                res.put(&quot;status&quot;, 0);</span>
+<span class="nc" id="L98">                System.out.println(&quot;uh?&quot;);</span>
+<span class="nc" id="L99">                res.put(&quot;resume&quot;, new JSONObject());</span>
+<span class="nc" id="L100">            }</span>
         }
 
         // /getDataPlugins {&quot;plugins&quot;: [&quot;xx&quot; , &quot;xx&quot;]}
         // /parseResume POST para1 = resumePath para2 = pluginName Return Json
         // {&quot;status&quot;: 0/1, &quot;resume&quot;:{}, message:&quot;&quot;} (0 failed, 1 success)
-<span class="nc" id="L93">        System.out.println(res.toString());</span>
-<span class="nc" id="L94">        return newFixedLengthResponse(res.toString());</span>
+<span class="nc" id="L106">        System.out.println(res.toString());</span>
+<span class="nc" id="L107">        return newFixedLengthResponse(res.toString());</span>
     }
 
     /**
@@ -100,13 +113,13 @@ public class APP extends NanoHTTPD {
      * @return List of instantiated plugins
      */
     private HashMap&lt;String, DataPlugin&gt; loadPlugins() {
-<span class="nc" id="L103">        ServiceLoader&lt;DataPlugin&gt; plugins = ServiceLoader.load(DataPlugin.class);</span>
-<span class="nc" id="L104">        HashMap&lt;String, DataPlugin&gt; result = new HashMap&lt;&gt;();</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (DataPlugin plugin : plugins) {</span>
-<span class="nc" id="L106">            System.out.println(&quot;Loaded plugin &quot; + plugin.getPluginName());</span>
-<span class="nc" id="L107">            result.put(plugin.getPluginName(), plugin);</span>
-<span class="nc" id="L108">        }</span>
-<span class="nc" id="L109">        return result;</span>
+<span class="nc" id="L116">        ServiceLoader&lt;DataPlugin&gt; plugins = ServiceLoader.load(DataPlugin.class);</span>
+<span class="nc" id="L117">        HashMap&lt;String, DataPlugin&gt; result = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        for (DataPlugin plugin : plugins) {</span>
+<span class="nc" id="L119">            System.out.println(&quot;Loaded plugin &quot; + plugin.getPluginName());</span>
+<span class="nc" id="L120">            result.put(plugin.getPluginName(), plugin);</span>
+<span class="nc" id="L121">        }</span>
+<span class="nc" id="L122">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

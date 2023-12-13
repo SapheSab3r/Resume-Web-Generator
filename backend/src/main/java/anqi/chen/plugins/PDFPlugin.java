@@ -3,6 +3,7 @@ package anqi.chen.plugins;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import anqi.chen.framework.DataPlugin;
 import anqi.chen.framework.Experience;
@@ -14,13 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.regex.Pattern;
-
-import javax.swing.plaf.synth.SynthEditorPaneUI;
 
 import java.util.regex.Matcher;
 
@@ -28,7 +23,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 public class PDFPlugin implements DataPlugin {
-    private final int num3 = 3;
+    private final String datePatternString = "(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.)\\s\\d{4}\\s*[–—-]?\\s*(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May |Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.|Present)\\s?(?:\\d{4})?";
+
     private String[] splitDocumentText;
 
     @Override
@@ -44,7 +40,7 @@ public class PDFPlugin implements DataPlugin {
 
     @Override
     public void onRegister(ResumeFramework framework) {
-
+        
     }
 
     @Override
@@ -160,8 +156,6 @@ public class PDFPlugin implements DataPlugin {
     }
 
     private Education createEducation(int startIdx) {
-        String datePatternString = "(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.)\\s\\d{4}\\s*[-–—\\?]\\s*(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.)\\s\\d{4}";
-
         Pattern datePattern = Pattern.compile(datePatternString);
         String schoolLine = splitDocumentText[startIdx].trim();
         Matcher dateMatcher = datePattern.matcher(schoolLine);
@@ -185,11 +179,13 @@ public class PDFPlugin implements DataPlugin {
             if (splitDocumentText.length > startIdx + 1) {
                 String majorAndLocationLine = splitDocumentText[startIdx + 1].trim();
 
-                // Find the last occurrence of the comma and space as the delimiter
-                int lastDelimiterIndex = majorAndLocationLine.lastIndexOf(", ");
-                if (lastDelimiterIndex != -1) {
-                    major = majorAndLocationLine.substring(0, lastDelimiterIndex).trim();
-                    location = majorAndLocationLine.substring(lastDelimiterIndex + 2).trim();
+                // Use a regex pattern to identify the location format (e.g., City, ST)
+                Pattern locationPattern = Pattern.compile("\\w+\\S*,\\s*[A-Z]{2}");
+                Matcher locationMatcher = locationPattern.matcher(majorAndLocationLine);
+
+                if (locationMatcher.find()) {
+                    location = majorAndLocationLine.substring(locationMatcher.start()).trim();
+                    major = majorAndLocationLine.substring(0, locationMatcher.start()).trim();
                 } else {
                     throw new IllegalArgumentException("Unable to extract major and location.");
                 }
@@ -232,7 +228,6 @@ public class PDFPlugin implements DataPlugin {
     public List<Experience> getExperience() {
         List<Integer> idxStart = new ArrayList<>();
         List<Experience> experiences = new ArrayList<>();
-        String datePatternString = "(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.)\\s\\d{4}\\s*[–—-]?\\s*(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.|Present)\\s?(?:\\d{4})?";
 
         Pattern datePattern = Pattern.compile(datePatternString);
 
@@ -257,7 +252,6 @@ public class PDFPlugin implements DataPlugin {
         }
 
         for (int idx : idxStart) {
-            System.out.print(idxStart);
             experiences.add(createExperience(idx));
         }
 
@@ -265,7 +259,6 @@ public class PDFPlugin implements DataPlugin {
     }
 
     private Experience createExperience(int startIdx) {
-        System.out.println(startIdx);
         String title = null;
         String startDate = null;
         String endDate = null;
@@ -273,11 +266,8 @@ public class PDFPlugin implements DataPlugin {
         String location = null;
         List<String> descriptions = new ArrayList<>();
 
-        String datePatternString = "(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.)\\s\\d{4}\\s*[–—-]?\\s*(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May\\.|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.|Present)\\s?(?:\\d{4})?";
-
         Pattern datePattern = Pattern.compile(datePatternString);
         String titleLine = splitDocumentText[startIdx].trim();
-        System.out.println(titleLine);
         Matcher dateMatcher = datePattern.matcher(titleLine);
 
         if (dateMatcher.find()) {
@@ -296,11 +286,13 @@ public class PDFPlugin implements DataPlugin {
             if (splitDocumentText.length > startIdx + 1) {
                 String positionAndLocationLine = splitDocumentText[startIdx + 1].trim();
 
-                // Find the last occurrence of the comma and space as the delimiter
-                int lastDelimiterIndex = positionAndLocationLine.lastIndexOf(", ");
-                if (lastDelimiterIndex != -1) {
-                    position = positionAndLocationLine.substring(0, lastDelimiterIndex).trim();
-                    location = positionAndLocationLine.substring(lastDelimiterIndex + 2).trim();
+                // Use a regex pattern to identify the location format (e.g., City, ST)
+                Pattern locationPattern = Pattern.compile("\\w+\\S*,\\s*[A-Z]{2}");
+                Matcher locationMatcher = locationPattern.matcher(positionAndLocationLine);
+
+                if (locationMatcher.find()) {
+                    location = positionAndLocationLine.substring(locationMatcher.start()).trim();
+                    position = positionAndLocationLine.substring(0, locationMatcher.start()).trim();
                 } else {
                     throw new IllegalArgumentException("Unable to extract major and location.");
                 }
@@ -319,7 +311,7 @@ public class PDFPlugin implements DataPlugin {
 
             String detailLine = splitDocumentText[detailsIdx];
 
-            /// Check if the line starts with a date pattern
+            // Check if the line starts with a date pattern
             Matcher dateMatcher2 = datePattern.matcher(detailLine);
             if (dateMatcher2.find()) {
                 // If a date pattern is found, it's the start of a new experience section
@@ -365,8 +357,6 @@ public class PDFPlugin implements DataPlugin {
         List<Integer> startIdxs = new ArrayList<>();
         List<Project> projects = new ArrayList<>();
 
-        String datePatternString = "(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.)\\s\\d{4}\\s*[–—-]?\\s*(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.|Present)\\s?(?:\\d{4})?";
-
         Pattern datePattern = Pattern.compile(datePatternString);
 
         for (int i = 0; i < splitDocumentText.length; i++) {
@@ -400,16 +390,24 @@ public class PDFPlugin implements DataPlugin {
         String endDate = null;
         List<String> descriptions = new ArrayList<>();
 
-        String datePatternString = "(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.)\\s\\d{4}\\s*[–—-]?\\s*(Jan\\.|Feb\\.|Mar\\.|Apr\\.|May|Jun\\.|Jul\\.|Aug\\.|Sep\\.|Oct\\.|Nov\\.|Dec\\.|Present)\\s?(?:\\d{4})?";
-
         Pattern datePattern = Pattern.compile(datePatternString);
         String projectLine = splitDocumentText[startIdx].trim();
-
         Matcher dateMatcher = datePattern.matcher(projectLine);
+
         if (dateMatcher.find()) {
-            // Extract the date portion as the project title
-            title = projectLine.substring(0, dateMatcher.start()).trim();
+            // extract title
+            String[] parts = projectLine.split("\\|");
+            title = parts[0].trim();
+            // extract date and skills
+            String skillsAndDate = parts[1].trim();
+            Matcher match = datePattern.matcher(skillsAndDate);
+            if (match.find()) {
+                String skillsString = skillsAndDate.substring(0, match.start()).trim();
+                Collections.addAll(skills, skillsString.split(",\\s*"));
+            }
+
             String datePortion = projectLine.substring(dateMatcher.start(), dateMatcher.end());
+
             String[] dates = datePortion.split("\\s*[-–—\\?]\\s*");
             if (dates.length >= 2) {
                 startDate = dates[0].trim();
@@ -426,22 +424,30 @@ public class PDFPlugin implements DataPlugin {
                 && !splitDocumentText[detailsIdx].trim().isEmpty()) {
 
             String detailLine = splitDocumentText[detailsIdx];
-            System.out.println("there is line:  " + detailLine);
-            // Check if the detailLine contains a pipe symbol (|) to split tech stack and
-            // summary
-            if (detailLine.contains("|")) {
-                String[] parts = detailLine.split("\\|");
-                if (parts.length == 2) {
-                    // Extract skills and summary
-                    String skillsPart = parts[0].trim();
-                    String[] skillArray = skillsPart.split(",");
-                    skills.addAll(Arrays.asList(skillArray));
-                }
-            } else {
-                // If no pipe symbol is found, treat the line as a description
-                descriptions.add(detailLine.trim());
+
+            // Check if the line starts with a date pattern
+            Matcher dateMatcher2 = datePattern.matcher(detailLine);
+            if (dateMatcher2.find()) {
+                // If a date pattern is found, it's the start of a new experience section
+                break; // Exit the loop as a new experience section has started
             }
 
+            // Check if the line starts with a bullet point (•)
+            if (detailLine.startsWith("•")) {
+                // Remove the bullet point and trim again to ensure there are no extra spaces
+                detailLine = detailLine.substring(1).trim();
+
+                // Check if the detailLine ends with a comma and the next line is not empty
+                while (detailLine.endsWith(",")
+                        && detailsIdx + 1 < splitDocumentText.length
+                        && !splitDocumentText[detailsIdx + 1].trim().isEmpty()
+                        && !splitDocumentText[detailsIdx + 1].trim().equalsIgnoreCase("NOTABLE PROJECTS")) {
+                    // Append the next line to the current detailLine and increment the detailsIdx
+                    detailsIdx++;
+                    detailLine += " " + splitDocumentText[detailsIdx].trim();
+                }
+            }
+            descriptions.add(detailLine);
             detailsIdx++;
         }
 
@@ -483,6 +489,7 @@ public class PDFPlugin implements DataPlugin {
             for (Education education : plugin.getEducation()) {
                 System.out.println("School: " + education.getSchool());
                 System.out.println("Major: " + education.getMajor());
+                System.out.println("Location: " + education.getLocation());
                 System.out.println("StartDate: " + education.getStartDate());
                 System.out.println("EndDate: " + education.getEndDate());
                 System.out.println("Description: " + education.getDescription());
@@ -507,7 +514,11 @@ public class PDFPlugin implements DataPlugin {
             System.out.println("\nPROJECTS:");
             for (Project project : plugin.getProject()) {
                 // Assuming Project class has a suitable toString() method
-                System.out.println(project);
+                System.out.println("Title: " + project.getTitle());
+                System.out.println("Skills: " + project.getSkills());
+                System.out.println("StartDate: " + project.getStartDate());
+                System.out.println("EndDate: " + project.getEndDate());
+                System.out.println("Description: " + project.getDescription());
                 System.out.println("-----");
             }
         } catch (IOException e) {
